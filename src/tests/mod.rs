@@ -2,6 +2,7 @@ mod length_tests;
 mod temperature_tests;
 mod weight_tests;
 mod volume_tests;
+mod data_tests;
 
 const DEFAULT_DELTA: f64 = 0.00001;
 
