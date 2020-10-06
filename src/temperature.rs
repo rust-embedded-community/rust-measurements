@@ -1,6 +1,10 @@
 //! Types and constants for handling temperature.
 
 use super::measurement::*;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
+#[cfg(feature = "from_str")]
+use regex::Regex;
 
 /// The `Temperature` struct can be used to deal with absolute temperatures in
 /// a common way.
@@ -204,6 +208,35 @@ impl ::std::cmp::PartialOrd for Temperature {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Temperature {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Temperature from a string
+    /// Plain numbers in string are considered to be Celsius
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Temperature::from_celsius(0.0));
+        }
+
+        let re = Regex::new(r"\s*([0-9.]*)\s?(deg|\u{00B0}|)?\s?([fckrFCKR]{1})\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(3).unwrap().as_str().to_uppercase().as_str() {
+                    "F" => Temperature::from_fahrenheit(float_val.parse::<f64>()?),
+                    "C" => Temperature::from_celsius(float_val.parse::<f64>()?),
+                    "K" => Temperature::from_kelvin(float_val.parse::<f64>()?),
+                    "R" => Temperature::from_rankine(float_val.parse::<f64>()?),
+                    _ => Temperature::from_celsius(val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Temperature::from_celsius(val.parse::<f64>()?))
+    }
+}
+
 implement_display!(Temperature);
 implement_measurement!(TemperatureDelta);
 
@@ -243,6 +276,113 @@ mod test {
         let o = t.as_rankine();
 
         assert_almost_eq(o, 180.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn empty_str() {
+        let t = Temperature::from_str("");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_celsius();
+        assert_eq!(o, 0.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn celsius_str() {
+        let t = Temperature::from_str("100C");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_celsius();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn celsius_space_str() {
+        let t = Temperature::from_str("100 C");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_celsius();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn celsius_degree_str() {
+        let t = Temperature::from_str("100°C");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_celsius();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn fahrenheit_str() {
+        let t = Temperature::from_str("100F");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_fahrenheit();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn fahrenheit_lc_str() {
+        let t = Temperature::from_str("100 f");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_fahrenheit();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn fahrenheit_degree_str() {
+        let t = Temperature::from_str("100 deg f");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_fahrenheit();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn rankine_str() {
+        let t = Temperature::from_str("100R");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_rankine();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn rankine_degree_str() {
+        let t = Temperature::from_str("100 °R");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_rankine();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn number_str() {
+        let t = Temperature::from_str("100.5");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_celsius();
+        assert_almost_eq(o, 100.5);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_str() {
+        let t = Temperature::from_str("abcd");
+        assert!(t.is_err());
     }
 
     // Traits

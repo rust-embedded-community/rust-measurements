@@ -83,6 +83,15 @@ fn main() {
 }
 ```
 
+### Features
+
+The crate contains few features to disable or enable certain functionalities:
+
+* no_std
+    * Removes functionality that Rust std library provides
+* from_str
+    * Allows creating measurement units from string input
+
 --------------------------------------
 
 **References**
