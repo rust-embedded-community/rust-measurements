@@ -1,7 +1,11 @@
 //! Types and constants for handling acceleration.
 
-use super::measurement::*;
 use super::length;
+use super::measurement::*;
+#[cfg(feature = "from_str")]
+use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
 
 /// The `Acceleration` struct can be used to deal with Accelerations in a common way.
 /// Common metric and imperial units are supported.
@@ -78,14 +82,47 @@ impl Measurement for Acceleration {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Acceleration {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Acceleration from a string
+    /// Plain numbers in string are considered to be meters per second
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Acceleration::from_metres_per_second_per_second(0.0));
+        }
+
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([ftmps -1]{1,6})\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
+                    "m/s" | "m s-1" => {
+                        Acceleration::from_meters_per_second_per_second(float_val.parse::<f64>()?)
+                    }
+                    "ft/s" | "fps" | "ft s-1" => {
+                        Acceleration::from_feet_per_second_per_second(float_val.parse::<f64>()?)
+                    }
+                    _ => Acceleration::from_meters_per_second_per_second(val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Acceleration::from_meters_per_second_per_second(
+            val.parse::<f64>()?,
+        ))
+    }
+}
+
 implement_measurement! { Acceleration }
 
 #[cfg(test)]
 mod test {
 
     use super::*;
-    use test_utils::assert_almost_eq;
     use speed::Speed;
+    use test_utils::assert_almost_eq;
 
     // Metric
     #[test]
@@ -157,5 +194,67 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn meters_per_second_str() {
+        let t = Acceleration::from_str(" 12.0m/s");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_meters_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn meters_per_second_minus_str() {
+        let t = Acceleration::from_str("12.0 m s-1");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_meters_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn feet_per_second_str() {
+        let t = Acceleration::from_str(" 12.0ft/s");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_feet_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn feet_per_second_fps_str() {
+        let t = Acceleration::from_str(" 12.0fps");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_feet_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn feet_per_second_minus_str() {
+        let t = Acceleration::from_str("12.0 ft s-1");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_feet_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn number_str() {
+        let t = Acceleration::from_str("100.5");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_meters_per_second_per_second();
+        assert_almost_eq(o, 100.5);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_str() {
+        let t = Acceleration::from_str("abcd");
+        assert!(t.is_err());
     }
 }
