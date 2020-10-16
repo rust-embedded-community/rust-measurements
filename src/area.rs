@@ -1,7 +1,11 @@
 //! Types and constants for handling areas.
 
-use super::measurement::*;
 use super::length;
+use super::measurement::*;
+#[cfg(feature = "from_str")]
+use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
 
 /// Number of acres in a square meter
 const SQUARE_METER_ACRE_FACTOR: f64 = 1.0 / 4046.86;
@@ -303,6 +307,56 @@ impl Measurement for Area {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Area {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Area from a string
+    /// Plain numbers in string are considered to be square meters
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Area::from_square_meters(0.0));
+        }
+
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z2\u{00B2}\u{00B5} ]{1,5})\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            println!("{:?}", caps);
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(2).unwrap().as_str().trim().to_lowercase().as_str() {
+                    "nm\u{00B2}" | "nm2" => Area::from_square_nanometers(float_val.parse::<f64>()?),
+                    "\u{00B5}m\u{00B2}" | "\u{00B5}m2" | "um\u{00B2}" | "um2" => {
+                        Area::from_square_micrometers(float_val.parse::<f64>()?)
+                    }
+                    "mm\u{00B2}" | "mm2" => {
+                        Area::from_square_millimeters(float_val.parse::<f64>()?)
+                    }
+                    "cm\u{00B2}" | "cm2" => {
+                        Area::from_square_centimeters(float_val.parse::<f64>()?)
+                    }
+                    "dm\u{00B2}" | "dm2" => Area::from_square_decimeters(float_val.parse::<f64>()?),
+                    "m\u{00B2}" | "m2" => Area::from_square_meters(float_val.parse::<f64>()?),
+                    "km\u{00B2}" | "km2" => Area::from_square_kilometers(float_val.parse::<f64>()?),
+                    "ha" | "hm\u{00B2}" | "hm2" => Area::from_hectares(float_val.parse::<f64>()?),
+                    "acre" | "ac" => Area::from_acres(float_val.parse::<f64>()?),
+                    "ft\u{00B2}" | "ft2" | "sq ft" => {
+                        Area::from_square_feet(float_val.parse::<f64>()?)
+                    }
+                    "yd\u{00B2}" | "yd2" | "sq yd" => {
+                        Area::from_square_yards(float_val.parse::<f64>()?)
+                    }
+                    "mi\u{00B2}" | "mi2" | "sq mi" => {
+                        Area::from_square_miles(float_val.parse::<f64>()?)
+                    }
+                    _ => Area::from_square_meters(val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Area::from_square_meters(val.parse::<f64>()?))
+    }
+}
+
 implement_measurement! { Area }
 
 #[cfg(test)]
@@ -530,4 +584,102 @@ mod test {
         assert_almost_eq(r2, 258998704.7);
     }
 
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn empty_str() {
+        let t = Area::from_str("");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_square_meters();
+        assert_eq!(o, 0.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_str() {
+        let t = Area::from_str("abcd");
+        assert!(t.is_err());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_nanometer_str() {
+        let t = Area::from_str(" 100.0 nm2");
+        assert_almost_eq(t.unwrap().as_square_nanometers(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_micrometer_str() {
+        let t = Area::from_str(" 100.0 um2");
+        assert_almost_eq(t.unwrap().as_square_micrometers(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_millimeter_str() {
+        let t = Area::from_str(" 100.0 mm2");
+        assert_almost_eq(t.unwrap().as_square_millimeters(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_centimeter_str() {
+        let t = Area::from_str(" 100.0 cm2 ");
+        assert_almost_eq(t.unwrap().as_square_centimeters(), 100.0);
+    }
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_decimeter_str() {
+        let t = Area::from_str(" 100.0 dm2");
+        assert_almost_eq(t.unwrap().as_square_decimeters(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_meter_str() {
+        let t = Area::from_str(" 100.0 m2 ");
+        assert_almost_eq(t.unwrap().as_square_meters(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_hectometer_str() {
+        let t = Area::from_str(" 100.0 ha ");
+        assert_almost_eq(t.unwrap().as_square_hectometers(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_kilometer_str() {
+        let t = Area::from_str(" 100.0 km\u{00B2} ");
+        assert_almost_eq(t.unwrap().as_square_kilometers(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_feet_str() {
+        let t = Area::from_str(" 100.0 ft\u{00B2} ");
+        assert_almost_eq(t.unwrap().as_square_feet(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_yard_str() {
+        let t = Area::from_str(" 100.0 sq yd ");
+        assert_almost_eq(t.unwrap().as_square_yards(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn square_mile_str() {
+        let t = Area::from_str(" 100.0 sq mi ");
+        assert_almost_eq(t.unwrap().as_square_miles(), 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn acre_str() {
+        let t = Area::from_str(" 100.0 acre ");
+        assert_almost_eq(t.unwrap().as_acres(), 100.0);
+    }
 }
