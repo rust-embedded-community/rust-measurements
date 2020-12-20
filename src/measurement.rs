@@ -65,7 +65,7 @@ pub trait Measurement {
     fn pick_appropriate_units(&self, list: &[(&'static str, f64)]) -> (&'static str, f64) {
         for &(unit, ref scale) in list.iter().rev() {
             let value = self.as_base_units() / scale;
-            if value > 1.0 || value < -1.0 {
+            if value >= 1.0 || value <= -1.0 {
                 return (unit, value);
             }
         }
