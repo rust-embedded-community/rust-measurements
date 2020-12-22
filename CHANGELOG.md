@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Added this Changelog.
 
+### Changed
+
+- Merged in [#36](https://github.com/rust-embedded-community/rust-measurements/pull/36) to adjust bounds on `Measurements::pick_appropriate_units()`, which changes the return value for cases when the value is 1.0.
+
 ## [0.10.2]
 
 Merged in [#17](https://github.com/thejpster/rust-measurements/pull/17) to add:
