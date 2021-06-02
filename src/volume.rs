@@ -1,6 +1,10 @@
 //! Types and constants for handling volumes (that is, three-dimensional space, not loudness).
 
 use super::measurement::*;
+#[cfg(feature = "from_str")]
+use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
 
 /// The `Volume` struct can be used to deal with volumes in a common way.
 ///
@@ -317,12 +321,59 @@ impl Measurement for Volume {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Volume {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Volume from a string
+    /// Plain numbers in string are considered to be Liters. Defaults for units with US
+    /// and UK variants are considered to be in US without specific "imp" prefix.
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Volume::from_liters(0.0));
+        }
+
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z .]{1,10}[0-9³]{0,1})\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
+                    "cm3" | "cm\u{00b3}" => {
+                        Volume::from_cubic_centimeters(float_val.parse::<f64>()?)
+                    }
+                    "ft3" | "ft\u{00b3}" => Volume::from_cubic_feet(float_val.parse::<f64>()?),
+                    "yd3" | "yd\u{00b3}" => Volume::from_cubic_yards(float_val.parse::<f64>()?),
+                    "in3" | "in\u{00b3}" => Volume::from_cubic_inches(float_val.parse::<f64>()?),
+                    "gal" | "us gal" => Volume::from_gallons(float_val.parse::<f64>()?),
+                    "imp gal" => Volume::from_gallons_uk(float_val.parse::<f64>()?),
+                    "cup" => Volume::from_cups(float_val.parse::<f64>()?),
+                    "tsp" => Volume::from_teaspoons(float_val.parse::<f64>()?),
+                    "tbsp" | "t." => Volume::from_tablespoons(float_val.parse::<f64>()?),
+                    "ml" => Volume::from_milliliters(float_val.parse::<f64>()?),
+                    "us fl oz" | "fl oz" => Volume::from_fluid_ounces(float_val.parse::<f64>()?),
+                    "imp fl oz" => Volume::from_fluid_ounces_uk(float_val.parse::<f64>()?),
+                    "m3" | "m\u{00b3}" => Volume::from_cubic_meters(float_val.parse::<f64>()?),
+                    "gt" | "gtt" => Volume::from_drops(float_val.parse::<f64>()?),
+                    "dr" => Volume::from_drams(float_val.parse::<f64>()?),
+                    "l" => Volume::from_litres(float_val.parse::<f64>()?),
+                    "qt" => Volume::from_quarts(float_val.parse::<f64>()?),
+                    "us pt" | "us p" | "p" | "pt" => Volume::from_pints(float_val.parse::<f64>()?),
+                    "imp pt" | "imp p" => Volume::from_pints_uk(float_val.parse::<f64>()?),
+                    _ => Volume::from_litres(val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Volume::from_liters(val.parse::<f64>()?))
+    }
+}
+
 implement_measurement! { Volume }
 
 #[cfg(test)]
 mod test {
-    use volume::*;
     use test_utils::assert_almost_eq;
+    use volume::*;
 
     // Volume Units
     // Metric
@@ -594,4 +645,230 @@ mod test {
         assert_eq!(a >= b, false);
     }
 
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn empty_val_from_str() {
+        let v = Volume::from_str("");
+        assert!(v.is_ok());
+        assert_eq!(0.0, v.unwrap().as_litres());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cubic_centimeters_from_str() {
+        let v = Volume::from_str(" 10cm3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_centimeters());
+
+        let v2 = Volume::from_str("10 cm³ ");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_cubic_centimetres());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cubic_feet_from_str() {
+        let v = Volume::from_str(" 10 ft3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_feet());
+
+        let v2 = Volume::from_str(" 10ft³ ");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_cubic_feet());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cubic_yard_from_str() {
+        let v = Volume::from_str(" 10 yd3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_yards());
+
+        let v2 = Volume::from_str(" 10yd³ ");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_cubic_yards());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cubic_inches_from_str() {
+        let v = Volume::from_str(" 10 in3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_inches());
+
+        let v2 = Volume::from_str("10in³ ");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_cubic_inches());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn gallons_from_str() {
+        let v = Volume::from_str(" 10 gal");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_gallons());
+
+        let v2 = Volume::from_str("10 US gal");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_gallons());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn uk_gallons_from_str() {
+        let v = Volume::from_str(" 10 imp gal");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_gallons_uk());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cups_from_str() {
+        let v = Volume::from_str("10cup");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cups());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn teaspoons_from_str() {
+        let v = Volume::from_str("10tsp");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_teaspoons());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn tablespoons_from_str() {
+        let v = Volume::from_str("10 tbsp");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_tablespoons());
+
+        let v2 = Volume::from_str("10T.");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_tablespoons());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn milliliters_from_str() {
+        let v = Volume::from_str("10ml");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_milliliters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn fluid_ounces_from_str() {
+        let v = Volume::from_str("10 US fl oz");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_fluid_ounces());
+
+        let v2 = Volume::from_str("10 fl oz");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_fluid_ounces());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn fluid_ounces_uk_from_str() {
+        let v = Volume::from_str("10imp fl oz");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_fluid_ounces_uk());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn cubic_meters_from_str() {
+        let v = Volume::from_str("10 m3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_meters());
+
+        let v2 = Volume::from_str("10m³");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_cubic_meters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn drops_from_str() {
+        let v = Volume::from_str("10 gt");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_drops());
+
+        let v2 = Volume::from_str("10gtt");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_drops());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn drams_from_str() {
+        let v = Volume::from_str("10dr");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_drams());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn liters_from_str() {
+        let v = Volume::from_str("10L");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_liters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn quarts_from_str() {
+        let v = Volume::from_str("10qt");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_quarts());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pints_from_str() {
+        let v = Volume::from_str("10 US pt");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_pints());
+
+        let v2 = Volume::from_str("10 US p");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_pints());
+
+        let v3 = Volume::from_str("10p");
+        assert!(v3.is_ok());
+        assert_almost_eq(10.0, v3.unwrap().as_pints());
+
+        let v4 = Volume::from_str("10pt");
+        assert!(v4.is_ok());
+        assert_almost_eq(10.0, v4.unwrap().as_pints());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pints_uk_from_str() {
+        let v = Volume::from_str("10 imp pt");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_pints_uk());
+
+        let v2 = Volume::from_str("10 imp p");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_pints_uk());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn default_from_str() {
+        let v = Volume::from_str("10");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_liters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_from_str() {
+        let v = Volume::from_str("10abcd");
+        assert_eq!(false, v.is_ok());
+    }
 }

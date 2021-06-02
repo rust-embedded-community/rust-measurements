@@ -2,6 +2,11 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
+
 /// The 'Angle' struct can be used to deal with angles in a common way.
 ///
 /// # Example
@@ -98,6 +103,33 @@ impl Measurement for Angle {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Angle {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Angle from a string
+    /// Plain numbers in string are considered to be plain degrees
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Angle::from_degrees(0.0));
+        }
+
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?(deg|\u{00B0}|rad)\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
+                    "deg" | "\u{00B0}" => Angle::from_degrees(float_val.parse::<f64>()?),
+                    "rad" => Angle::from_radians(float_val.parse::<f64>()?),
+                    _ => Angle::from_degrees(val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Angle::from_degrees(val.parse::<f64>()?))
+    }
+}
+
 implement_measurement! { Angle }
 
 #[cfg(test)]
@@ -114,5 +146,52 @@ mod test {
         let r2 = i2.as_degrees();
         assert_almost_eq(r1, 2.0 * PI);
         assert_almost_eq(r2, 180.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn angle_from_str() {
+        let t = Angle::from_str("100 deg");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_degrees();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn angle_from_degree_str() {
+        let t = Angle::from_str("100°");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_degrees();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn angle_from_radian_str() {
+        let t = Angle::from_str("100rad");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_radians();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn default_str() {
+        let t = Angle::from_str("100");
+        assert!(t.is_ok());
+
+        let o = t.unwrap().as_degrees();
+        assert_almost_eq(o, 100.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_str() {
+        let t = Angle::from_str("abcd");
+        assert!(t.is_err());
     }
 }

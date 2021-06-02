@@ -1,6 +1,10 @@
 //! Types and constants for handling masses.
 
 use super::measurement::*;
+#[cfg(feature = "from_str")]
+use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
 
 // Constants, metric
 
@@ -252,6 +256,42 @@ impl Measurement for Mass {
     }
 }
 
+#[cfg(feature = "from_str")]
+impl FromStr for Mass {
+    type Err = std::num::ParseFloatError;
+
+    /// Create a new Mass from a string
+    /// Plain numbers in string are considered to be Kilograms
+    fn from_str(val: &str) -> Result<Self, Self::Err> {
+        if val.is_empty() {
+            return Ok(Mass::from_kilograms(0.0));
+        }
+
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-zμ]{1,3})\s*$").unwrap();
+        if let Some(caps) = re.captures(val) {
+            let float_val = caps.get(1).unwrap().as_str();
+            return Ok(
+                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
+                    "ug" | "μg" => Mass::from_micrograms(float_val.parse::<f64>()?),
+                    "mg" => Mass::from_milligrams(float_val.parse::<f64>()?),
+                    "ct" => Mass::from_carats(float_val.parse::<f64>()?),
+                    "g" => Mass::from_grams(float_val.parse::<f64>()?),
+                    "kg" => Mass::from_kilograms(float_val.parse::<f64>()?),
+                    "t" => Mass::from_metric_tons(float_val.parse::<f64>()?),
+                    "gr" => Mass::from_grains(float_val.parse::<f64>()?),
+                    "dwt" => Mass::from_pennyweights(float_val.parse::<f64>()?),
+                    "oz" => Mass::from_ounces(float_val.parse::<f64>()?),
+                    "st" => Mass::from_stones(float_val.parse::<f64>()?),
+                    "lbs" => Mass::from_pounds(float_val.parse::<f64>()?),
+                    _ => Mass::from_grams(float_val.parse::<f64>()?),
+                },
+            );
+        }
+
+        Ok(Mass::from_kilograms(val.parse::<f64>()?))
+    }
+}
+
 implement_measurement! { Mass }
 
 #[cfg(test)]
@@ -485,4 +525,91 @@ mod test {
         assert_eq!(a >= b, false);
     }
 
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn number_str() {
+        let t = Mass::from_str("100.5");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_kilograms();
+        assert_almost_eq(o, 100.5);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn micrograms_from_string() {
+        assert_almost_eq(123.0, Mass::from_str(" 123ug ").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("123 ug ").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("  123μg").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("123 μg").unwrap().as_micrograms());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn milligrams_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123mg").unwrap().as_milligrams());
+        assert_almost_eq(123.0, Mass::from_str("123 mg").unwrap().as_milligrams());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn carats_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123ct").unwrap().as_carats());
+        assert_almost_eq(123.0, Mass::from_str("123 ct").unwrap().as_carats());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn grams_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123g").unwrap().as_grams());
+        assert_almost_eq(123.0, Mass::from_str("123 g").unwrap().as_grams());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilograms_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123kg").unwrap().as_kilograms());
+        assert_almost_eq(123.0, Mass::from_str("123 kg").unwrap().as_kilograms());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn tonnes_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123T").unwrap().as_tonnes());
+        assert_almost_eq(123.0, Mass::from_str("123 T").unwrap().as_tonnes());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn grains_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123gr").unwrap().as_grains());
+        assert_almost_eq(123.0, Mass::from_str("123 gr").unwrap().as_grains());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pennyweights_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123dwt").unwrap().as_pennyweights());
+        assert_almost_eq(123.0, Mass::from_str("123 dwt").unwrap().as_pennyweights());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn ounces_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123oz").unwrap().as_ounces());
+        assert_almost_eq(123.0, Mass::from_str("123 oz").unwrap().as_ounces());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pounds_from_string() {
+        assert_almost_eq(123.0, Mass::from_str("123lbs").unwrap().as_pounds());
+        assert_almost_eq(123.0, Mass::from_str("123 lbs").unwrap().as_pounds());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn invalid_str() {
+        let t = Mass::from_str("abcd");
+        assert!(t.is_err());
+    }
 }

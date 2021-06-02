@@ -21,7 +21,10 @@ use std::time;
 #[macro_use]
 extern crate serde;
 
-use std::f64::consts::PI;
+#[cfg(feature = "from_str")]
+extern crate regex;
+
+use std::f64::consts::PI as PI;
 
 #[macro_use]
 mod measurement;
