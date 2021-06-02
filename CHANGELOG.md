@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Added this Changelog.
 
-### Changed
+### Added
 
-- Added: humidity, density in response to Issue #19
+- Humidity and density in [#27](https://github.com/rust-embedded-community/rust-measurements/pull/27)
+
+### Changed
 
 - Merged in [#36](https://github.com/rust-embedded-community/rust-measurements/pull/36) to adjust bounds on `Measurements::pick_appropriate_units()`, which changes the return value for cases when the value is 1.0.
 
