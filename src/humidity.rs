@@ -67,7 +67,7 @@ impl Humidity {
     }
 
     /// Calculates Dewpoint from humidity and air temperature using the Magnus-Tetens
-    /// Approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
+    /// approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
     //  standard atmospheric pressure.
     #[cfg(not(feature = "no_std"))]
     pub fn as_dewpoint(&self, temp: Temperature) -> Temperature {
