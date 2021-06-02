@@ -77,7 +77,7 @@ impl Humidity {
             / (17.625 - humidity.ln() - ((17.625 * celsius) / (243.04 + celsius)));
         Temperature::from_celsius(dewpoint)
     }
-    /// Calculates the actual vapour pressure in the air, based onthe air temperature and humidity
+    /// Calculates the actual vapour pressure in the air, based on the air temperature and humidity
     /// at standard atmospheric pressure (1013.25 mb), using the Buck formula (accurate to +/- 0.02%
     /// between 0 deg C and 50 deg C)
     #[cfg(not(feature = "no_std"))]
