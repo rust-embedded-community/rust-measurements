@@ -24,9 +24,11 @@ Conversions to and from different units are simple, and operator overrides allow
 - Area
 - Current
 - Data (bytes, etc)
+- Density
 - Energy
 - Force
 - Frequency
+- Humidity
 - Length
 - Mass
 - Power
