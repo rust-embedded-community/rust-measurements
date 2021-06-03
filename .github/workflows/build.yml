@@ -81,6 +81,9 @@ jobs:
 
   clippy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        FEATURES: ['', 'from_str', 'no_std']
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -92,3 +95,4 @@ jobs:
       - uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          args: --features=${{ matrix.FEATURES }}
