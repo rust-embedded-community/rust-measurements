@@ -1,7 +1,7 @@
 //! Types and constants for handling frequencies.
 
 use super::measurement::*;
-use ::time;
+use time;
 
 /// Number of nanohertz in a Hz
 pub const HERTZ_NANOHERTZ_FACTOR: f64 = 1e9;
@@ -165,7 +165,7 @@ implement_measurement! { Frequency }
 mod test {
     use super::*;
     use test_utils::assert_almost_eq;
-    use ::time;
+    use time;
 
     #[test]
     pub fn hertz() {
@@ -315,5 +315,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

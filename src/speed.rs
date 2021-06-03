@@ -116,10 +116,10 @@ implement_measurement! { Speed }
 
 #[cfg(test)]
 mod test {
+    use length::Length;
     use speed::*;
     use test_utils::assert_almost_eq;
-    use ::time::Duration;
-    use length::Length;
+    use time::Duration;
 
     // Metric
     #[test]
@@ -238,5 +238,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

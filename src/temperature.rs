@@ -2,9 +2,9 @@
 
 use super::measurement::*;
 #[cfg(feature = "from_str")]
-use std::str::FromStr;
-#[cfg(feature = "from_str")]
 use regex::Regex;
+#[cfg(feature = "from_str")]
+use std::str::FromStr;
 
 /// The `Temperature` struct can be used to deal with absolute temperatures in
 /// a common way.
@@ -462,5 +462,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

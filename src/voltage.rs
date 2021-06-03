@@ -100,10 +100,10 @@ implement_measurement! { Voltage }
 
 #[cfg(test)]
 mod test {
-    use voltage::*;
-    use resistance::*;
     use current::*;
+    use resistance::*;
     use test_utils::assert_almost_eq;
+    use voltage::*;
 
     #[test]
     pub fn as_kilovolts() {
@@ -213,5 +213,4 @@ mod test {
         let r = u / i;
         assert_eq!(r.as_ohms(), 470.0);
     }
-
 }
