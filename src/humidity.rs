@@ -1,11 +1,8 @@
 //! Types and constants for handling humidity.
 
 use super::measurement::*;
-#[cfg(not(feature = "no_std"))]
 use density::Density;
-#[cfg(not(feature = "no_std"))]
 use pressure::Pressure;
-#[cfg(not(feature = "no_std"))]
 use temperature::Temperature;
 
 /// The `Humidity` struct can be used to deal with relative humidity
@@ -35,9 +32,7 @@ use temperature::Temperature;
 ///
 ///     let humidity = Humidity::from_percent(85.0);
 ///     let temp = Temperature::from_celsius(18.0);
-///     #[cfg(not(feature="no_std"))]
 ///     let dewpoint = humidity.as_dewpoint(temp);
-///     #[cfg(not(feature="no_std"))]
 ///     println!("At {} humidity, air at {} has a dewpoint of {}", humidity, temp, dewpoint);
 ///
 /// ```
@@ -82,6 +77,20 @@ impl Humidity {
             / (17.625 - humidity.ln() - ((17.625 * celsius) / (243.04 + celsius)));
         Temperature::from_celsius(dewpoint)
     }
+
+    /// Calculates Dewpoint from humidity and air temperature using the Magnus-Tetens
+    /// approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
+    //  standard atmospheric pressure.
+    #[cfg(feature = "no_std")]
+    pub fn as_dewpoint(&self, temp: Temperature) -> Temperature {
+        let humidity = self.relative_humidity / 100.0;
+        let celsius = temp.as_celsius();
+        let humidity_ln = libm::log(humidity);
+        let dewpoint: f64 = 243.04 * (humidity_ln + ((17.625 * celsius) / (243.04 + celsius)))
+            / (17.625 - humidity_ln - ((17.625 * celsius) / (243.04 + celsius)));
+        Temperature::from_celsius(dewpoint)
+    }
+
     /// Calculates the actual vapour pressure in the air, based on the air temperature and humidity
     /// at standard atmospheric pressure (1013.25 mb), using the Buck formula (accurate to +/- 0.02%
     /// between 0 deg C and 50 deg C)
@@ -93,9 +102,19 @@ impl Humidity {
         Pressure::from_kilopascals((self.relative_humidity * saturation_vapor_pressure) / 100.0)
     }
 
+    /// Calculates the actual vapour pressure in the air, based on the air temperature and humidity
+    /// at standard atmospheric pressure (1013.25 mb), using the Buck formula (accurate to +/- 0.02%
+    /// between 0 deg C and 50 deg C)
+    #[cfg(feature = "no_std")]
+    pub fn as_vapor_pressure(&self, temp: Temperature) -> Pressure {
+        let temp = temp.as_celsius();
+        let saturation_vapor_pressure =
+            0.61121 * libm::exp((18.678 - (temp / 234.5)) * (temp / (257.14 + temp)));
+        Pressure::from_kilopascals((self.relative_humidity * saturation_vapor_pressure) / 100.0)
+    }
+
     /// Calculates the absolute humidity (i.e. the density of water vapor in the air (kg/m3)), using
     /// the Ideal Gas Law equation.
-    #[cfg(not(feature = "no_std"))]
     pub fn as_absolute_humidity(&self, temp: Temperature) -> Density {
         // use the Ideal Gas Law equation (Density = Pressure / (Temperature * [gas constant
         // for water vapor= 461.5 (J/kg*Kelvin)]))
@@ -113,6 +132,19 @@ impl Humidity {
         let rh = 100.0
             * (((17.625 * dewpoint) / (243.04 + dewpoint)).exp()
                 / ((17.625 * temp) / (243.04 + temp)).exp());
+        Humidity::from_percent(rh)
+    }
+
+    /// Calculates humidity from dewpoint and air temperature using the Magnus-Tetens
+    /// Approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
+    //  standard atmospheric pressure.
+    #[cfg(feature = "no_std")]
+    pub fn from_dewpoint(dewpoint: Temperature, temp: Temperature) -> Humidity {
+        let dewpoint = dewpoint.as_celsius();
+        let temp = temp.as_celsius();
+        let rh = 100.0
+            * (libm::exp((17.625 * dewpoint) / (243.04 + dewpoint))
+                / libm::exp((17.625 * temp) / (243.04 + temp)));
         Humidity::from_percent(rh)
     }
 }
@@ -167,7 +199,6 @@ mod test {
         assert_almost_eq(o, 0.1);
     }
     // Dewpoint calculation
-    #[cfg(not(feature = "no_std"))]
     #[test]
     fn to_dewpoint1() {
         let humidity = Humidity::from_percent(85.0);
@@ -175,7 +206,6 @@ mod test {
         let dewpoint = humidity.as_dewpoint(temp);
         assert_almost_eq(dewpoint.as_celsius(), 15.44);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     fn to_dewpoint2() {
         let humidity = Humidity::from_percent(40.0);
@@ -183,7 +213,6 @@ mod test {
         let dewpoint = humidity.as_dewpoint(temp);
         assert_almost_eq(dewpoint.as_celsius(), -7.5);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     fn to_dewpoint3() {
         let humidity = Humidity::from_percent(95.0);
@@ -191,7 +220,6 @@ mod test {
         let dewpoint = humidity.as_dewpoint(temp);
         assert_almost_eq(dewpoint.as_celsius(), 29.11);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     fn from_dewpoint1() {
         let temp = Temperature::from_celsius(18.0);
@@ -199,7 +227,6 @@ mod test {
         let rh = Humidity::from_dewpoint(dewpoint, temp);
         assert_almost_eq(rh.as_percent(), 85.0);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     fn vapour_pressure() {
         let humidity = Humidity::from_percent(60.0);
@@ -207,7 +234,6 @@ mod test {
         let vp = humidity.as_vapor_pressure(temp);
         assert_almost_eq(vp.as_hectopascals(), 19.011);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     // also tests as_vapor_pressure() on the fly
     fn absolute_humidity() {
@@ -216,7 +242,6 @@ mod test {
         let density = humidity.as_absolute_humidity(temp);
         assert_almost_eq(density.as_kilograms_per_cubic_meter(), 0.0138166);
     }
-    #[cfg(not(feature = "no_std"))]
     #[test]
     // round-trip test
     fn from_dewpoint2() {
