@@ -27,9 +27,9 @@ pub fn assert_almost_eq_delta(a: f64, b: f64, d: f64) {
 /// This function doesn't seem to be available no `#![no_std]` so we re-
 /// implement it here.
 fn abs(x: f64) -> f64 {
-	if x > 0.0 {
-		x
-	} else {
-		-x
-	}
+    if x > 0.0 {
+        x
+    } else {
+        -x
+    }
 }

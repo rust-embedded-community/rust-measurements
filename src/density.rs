@@ -53,7 +53,7 @@ impl Density {
     /// Create a new Density from a floating point value in kilograms per cubic meter
     pub fn from_kilograms_per_cubic_meter(kilograms_per_cubic_meter: f64) -> Density {
         Density {
-            kilograms_per_cubic_meter: kilograms_per_cubic_meter,
+            kilograms_per_cubic_meter,
         }
     }
 

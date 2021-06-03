@@ -36,7 +36,7 @@ pub struct Pressure {
 impl Pressure {
     /// Create new Pressure from floating point value in Pascals (Pa)
     pub fn from_pascals(pascals: f64) -> Pressure {
-        Pressure { pascals: pascals }
+        Pressure { pascals }
     }
 
     /// Create new Pressure from floating point value in hectopascals (hPA)

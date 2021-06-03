@@ -37,7 +37,7 @@ pub struct Force {
 impl Force {
     /// Create a Force from a floating point value in Newtons
     pub fn from_newtons(newtons: f64) -> Self {
-        Force { newtons: newtons }
+        Force { newtons }
     }
 
     /// Create a Force from a floating point value in Micronewtons
@@ -282,5 +282,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

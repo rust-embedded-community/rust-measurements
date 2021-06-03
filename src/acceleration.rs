@@ -36,7 +36,7 @@ impl Acceleration {
     /// Create a new Acceleration from a floating point value in meters per second per second
     pub fn from_meters_per_second_per_second(meters_per_second_per_second: f64) -> Acceleration {
         Acceleration {
-            meters_per_second_per_second: meters_per_second_per_second,
+            meters_per_second_per_second,
         }
     }
 

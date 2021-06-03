@@ -31,9 +31,7 @@ pub struct Area {
 impl Area {
     /// Create new area from floating point value in Square Meters
     pub fn from_square_meters(square_meters: f64) -> Self {
-        Area {
-            square_meters: square_meters,
-        }
+        Area { square_meters }
     }
 
     /// Create new area from floating point value in Square Metres

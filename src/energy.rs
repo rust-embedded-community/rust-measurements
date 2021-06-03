@@ -22,7 +22,7 @@ pub struct Energy {
 impl Energy {
     /// Create a new Energy from a floating point value in Joules (or watt-seconds)
     pub fn from_joules(joules: f64) -> Energy {
-        Energy { joules: joules }
+        Energy { joules }
     }
 
     /// Create a new Energy from a floating point value in Kilocalories (often just called calories)
@@ -37,7 +37,7 @@ impl Energy {
 
     /// Create a new Energy from a floating point value in electron Volts (eV).
     pub fn from_e_v(e_v: f64) -> Energy {
-        Self::from_joules(e_v / 6.241509479607718e+18)
+        Self::from_joules(e_v / 6.241_509_479_607_718e18)
     }
 
     /// Create a new Energy from a floating point value in Watt-hours (Wh)
@@ -67,7 +67,7 @@ impl Energy {
 
     /// Convert this Energy into a floating point value in electron volts (eV)
     pub fn as_e_v(&self) -> f64 {
-        self.joules * 6.241509479607718e+18
+        self.joules * 6.241_509_479_607_718e18
     }
 
     /// Convert this Energy into a floating point value in Watt-hours (Wh)
@@ -242,5 +242,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

@@ -38,7 +38,7 @@ pub struct Data {
 impl Data {
     /// Create new Data from floating point value in Octets
     pub fn from_octets(octets: f64) -> Self {
-        Data { octets: octets }
+        Data { octets }
     }
 
     /// Create new Data from floating point value in Bits
@@ -337,5 +337,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

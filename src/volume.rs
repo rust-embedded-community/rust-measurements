@@ -64,7 +64,7 @@ pub const LITER_CUBIC_YARD_FACTOR: f64 = 0.0013079506193;
 impl Volume {
     /// Create a new Volume from a floating point value in Liters (l)
     pub fn from_liters(liters: f64) -> Self {
-        Volume { liters: liters }
+        Volume { liters }
     }
 
     /// Create a new Volume from a floating point value in Litres (l)

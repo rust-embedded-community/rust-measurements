@@ -66,9 +66,7 @@ pub struct Mass {
 impl Mass {
     /// Create a Mass from a floating point value in kilograms
     pub fn from_kilograms(kilograms: f64) -> Self {
-        Mass {
-            kilograms: kilograms,
-        }
+        Mass { kilograms }
     }
 
     /// Create a Mass from a floating point value in micrograms

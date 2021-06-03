@@ -24,9 +24,7 @@ pub struct Torque {
 impl Torque {
     /// Create a new Torque from a floating point value in newton metres
     pub fn from_newton_metres(newton_metres: f64) -> Self {
-        Torque {
-            newton_metres: newton_metres,
-        }
+        Torque { newton_metres }
     }
 
     /// Create a new Torque from a floating point value in newton meters

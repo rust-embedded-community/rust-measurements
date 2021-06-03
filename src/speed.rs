@@ -31,9 +31,7 @@ pub struct Speed {
 impl Speed {
     /// Create a new Speed from a floating point number of m/s
     pub fn from_meters_per_second(meters_per_second: f64) -> Speed {
-        Speed {
-            meters_per_second: meters_per_second,
-        }
+        Speed { meters_per_second }
     }
 
     /// Create a new Speed from a floating point number of m/s
@@ -116,10 +114,10 @@ implement_measurement! { Speed }
 
 #[cfg(test)]
 mod test {
+    use length::Length;
     use speed::*;
     use test_utils::assert_almost_eq;
-    use ::time::Duration;
-    use length::Length;
+    use time::Duration;
 
     // Metric
     #[test]
@@ -238,5 +236,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }

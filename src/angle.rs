@@ -33,7 +33,7 @@ impl Angle {
 
     /// Create a new Angle from a floating point value in radians
     pub fn from_radians(radians: f64) -> Self {
-        Angle { radians: radians }
+        Angle { radians }
     }
 
     /// Convert this Angle to a floating point value in degrees

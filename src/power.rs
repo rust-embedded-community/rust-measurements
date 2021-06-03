@@ -36,7 +36,7 @@ pub struct Power {
 impl Power {
     /// Create a new Power from a floating point value in Watts
     pub fn from_watts(watts: f64) -> Power {
-        Power { watts: watts }
+        Power { watts }
     }
 
     /// Create a new Power from a floating point value in milliwatts
@@ -152,10 +152,10 @@ implement_measurement! { Power }
 
 #[cfg(test)]
 mod test {
-    use power::*;
     use current::*;
-    use voltage::*;
+    use power::*;
     use test_utils::assert_almost_eq;
+    use voltage::*;
 
     #[test]
     pub fn as_btu_per_minute() {
@@ -302,5 +302,4 @@ mod test {
         let u = p / i;
         assert_eq!(u.as_volts(), 230.0);
     }
-
 }

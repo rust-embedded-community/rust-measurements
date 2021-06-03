@@ -56,7 +56,7 @@ pub type Distance = Length;
 impl Length {
     /// Create a new Length from a floating point value in meters
     pub fn from_meters(meters: f64) -> Self {
-        Length { meters: meters }
+        Length { meters }
     }
 
     /// Create a new Length from a floating point value in metres.
@@ -509,5 +509,4 @@ mod test {
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
     }
-
 }
