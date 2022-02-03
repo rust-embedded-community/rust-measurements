@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the `no_std` feature with an additive `std` feature, fixing problems with serde serialization on `no_std` targets.
+
 ## [0.10.4]
 
 ### Added
