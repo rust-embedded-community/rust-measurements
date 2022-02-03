@@ -69,7 +69,7 @@ impl Humidity {
     /// Calculates Dewpoint from humidity and air temperature using the Magnus-Tetens
     /// approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
     //  standard atmospheric pressure.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn as_dewpoint(&self, temp: Temperature) -> Temperature {
         let humidity = self.relative_humidity / 100.0;
         let celsius = temp.as_celsius();
@@ -81,7 +81,7 @@ impl Humidity {
     /// Calculates Dewpoint from humidity and air temperature using the Magnus-Tetens
     /// approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
     //  standard atmospheric pressure.
-    #[cfg(feature = "no_std")]
+    #[cfg(not(feature = "std"))]
     pub fn as_dewpoint(&self, temp: Temperature) -> Temperature {
         let humidity = self.relative_humidity / 100.0;
         let celsius = temp.as_celsius();
@@ -94,7 +94,7 @@ impl Humidity {
     /// Calculates the actual vapour pressure in the air, based on the air temperature and humidity
     /// at standard atmospheric pressure (1013.25 mb), using the Buck formula (accurate to +/- 0.02%
     /// between 0 deg C and 50 deg C)
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn as_vapor_pressure(&self, temp: Temperature) -> Pressure {
         let temp = temp.as_celsius();
         let saturation_vapor_pressure =
@@ -105,7 +105,7 @@ impl Humidity {
     /// Calculates the actual vapour pressure in the air, based on the air temperature and humidity
     /// at standard atmospheric pressure (1013.25 mb), using the Buck formula (accurate to +/- 0.02%
     /// between 0 deg C and 50 deg C)
-    #[cfg(feature = "no_std")]
+    #[cfg(not(feature = "std"))]
     pub fn as_vapor_pressure(&self, temp: Temperature) -> Pressure {
         let temp = temp.as_celsius();
         let saturation_vapor_pressure =
@@ -125,7 +125,7 @@ impl Humidity {
     /// Calculates humidity from dewpoint and air temperature using the Magnus-Tetens
     /// Approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
     //  standard atmospheric pressure.
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn from_dewpoint(dewpoint: Temperature, temp: Temperature) -> Humidity {
         let dewpoint = dewpoint.as_celsius();
         let temp = temp.as_celsius();
@@ -138,7 +138,7 @@ impl Humidity {
     /// Calculates humidity from dewpoint and air temperature using the Magnus-Tetens
     /// Approximation, with coefficients derived by Alduchov and Eskridge (1996). The formulas assume
     //  standard atmospheric pressure.
-    #[cfg(feature = "no_std")]
+    #[cfg(not(feature = "std"))]
     pub fn from_dewpoint(dewpoint: Temperature, temp: Temperature) -> Humidity {
         let dewpoint = dewpoint.as_celsius();
         let temp = temp.as_celsius();

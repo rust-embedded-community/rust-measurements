@@ -47,43 +47,43 @@ impl Angle {
     }
 
     /// Calculate the cosine of this angle
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn cos(&self) -> f64 {
         self.radians.cos()
     }
 
     /// Calculate the sine of this angle
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn sin(&self) -> f64 {
         self.radians.sin()
     }
 
     /// Calculate the sine and cosine of this angle
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn sin_cos(&self) -> (f64, f64) {
         self.radians.sin_cos()
     }
 
     /// Calculate the tangent of this angle
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn tan(&self) -> f64 {
         self.radians.tan()
     }
 
     /// Calculate the arcsine of a number
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn asin(num: f64) -> Self {
         Angle::from_radians(num.asin())
     }
 
     /// Calculate the arccosine of a number
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn acos(num: f64) -> Self {
         Angle::from_radians(num.acos())
     }
 
     /// Calculate the arctangent of a number
-    #[cfg(not(feature = "no_std"))]
+    #[cfg(feature = "std")]
     pub fn atan(num: f64) -> Self {
         Angle::from_radians(num.atan())
     }

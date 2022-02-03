@@ -7,14 +7,14 @@
 //! by an Area to get a Pressure.
 
 #![deny(warnings, missing_docs)]
-#![cfg_attr(feature = "no_std", no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use core as std;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use core::time;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::time;
 
 #[cfg(feature = "serde")]
