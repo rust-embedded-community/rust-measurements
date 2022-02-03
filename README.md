@@ -89,8 +89,8 @@ fn main() {
 
 The crate contains few features to disable or enable certain functionalities:
 
-* std
-    * Enables functionality that Rust std library provides instead of using libm for some maths functions
+* `std`
+    * Enables functionality that Rust standard library provides instead of using `libm` for some math functions
 * from_str
     * Allows creating measurement units from string input
 
