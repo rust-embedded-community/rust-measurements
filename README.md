@@ -46,7 +46,7 @@ In your Cargo.toml add the dependency...
 
 ```toml
 [dependencies]
-measurements = "^0.10.2"
+measurements = "0.11"
 ```
 
 In your code...

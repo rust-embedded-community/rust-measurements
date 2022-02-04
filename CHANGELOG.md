@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.11.0]
+
 ### Changed
 
 - Replaced the `no_std` feature with an additive `std` feature, fixing problems with serde serialization on `no_std` targets.
@@ -76,7 +78,8 @@ Adds:
 
 Changed Pressure to be in Pascals. Also add a bunch of tests and doc fixes.
 
-[Unreleased]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.10.4...HEAD
+[Unreleased]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.10.4...v0.11.0
 [0.10.4]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.10.3...v0.10.4
 [0.10.3]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/rust-embedded-community/rust-measurements/compare/v0.10.1...v0.10.2
