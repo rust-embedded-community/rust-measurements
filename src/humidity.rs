@@ -37,7 +37,7 @@ use temperature::Temperature;
 ///
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Humidity {
     relative_humidity: f64, // expressed as a percentage
 }

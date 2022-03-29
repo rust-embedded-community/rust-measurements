@@ -16,7 +16,7 @@ const NEWTON_METRE_POUND_FOOT_FACTOR: f64 = 0.73756326522588;
 /// println!("In metric, that's {} Nm", engine_torque.as_newton_metres());
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Torque {
     newton_metres: f64,
 }

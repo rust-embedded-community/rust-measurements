@@ -27,7 +27,7 @@ use std::str::FromStr;
 ///}
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Acceleration {
     meters_per_second_per_second: f64,
 }

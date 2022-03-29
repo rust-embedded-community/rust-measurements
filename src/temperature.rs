@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// println!("Boiling water measures at {} degrees fahrenheit.", fahrenheit);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Temperature {
     degrees_kelvin: f64,
 }

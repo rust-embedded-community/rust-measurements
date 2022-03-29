@@ -29,7 +29,7 @@ pub const DYNES_PER_NEWTON: f64 = 1e5;
 ///     force);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Force {
     newtons: f64,
 }

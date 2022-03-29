@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// println!("A gallon of beer will pour {} pints!", beers);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Volume {
     liters: f64,
 }

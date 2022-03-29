@@ -16,7 +16,7 @@ use super::measurement::*;
 /// println!("35 mA correspond to {} A or {} µA", a, u_a);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Current {
     amperes: f64,
 }

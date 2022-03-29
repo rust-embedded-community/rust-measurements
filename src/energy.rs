@@ -14,7 +14,7 @@ use super::measurement::*;
 /// println!("Some say a health adult male should consume {} per day", energy);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Energy {
     joules: f64,
 }

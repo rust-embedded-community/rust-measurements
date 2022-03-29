@@ -23,7 +23,7 @@ pub const SECONDS_HOURS_FACTOR: f64 = 60.0 * 60.0;
 /// println!("The speed of light is {} mph.", mph);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Speed {
     meters_per_second: f64,
 }

@@ -16,7 +16,7 @@ use super::measurement::*;
 /// println!("A 1.5 V battery has {} mV or {} kV", m_v, k_v);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Voltage {
     volts: f64,
 }

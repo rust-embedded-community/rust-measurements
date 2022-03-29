@@ -45,7 +45,7 @@ pub const METER_MILE_FACTOR: f64 = 10000.0 / (254.0 * 12.0 * 3.0 * 1760.0);
 /// println!("There are {} meters in a football field.", meters);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Length {
     meters: f64,
 }

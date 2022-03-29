@@ -44,7 +44,7 @@ pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
 /// ```
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Density {
     kilograms_per_cubic_meter: f64,
 }

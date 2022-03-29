@@ -28,7 +28,7 @@ pub const PASCAL_PSI_FACTOR: f64 = 6894.76;
 /// println!("Atmospheric pressure is {} mbar.", mbar);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Pressure {
     pascals: f64,
 }

@@ -20,7 +20,7 @@ use std::str::FromStr;
 /// println!("Each slice will be {} degrees", slice.as_degrees());
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Angle {
     radians: f64,
 }

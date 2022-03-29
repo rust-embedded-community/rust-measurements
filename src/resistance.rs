@@ -16,7 +16,7 @@ use super::measurement::*;
 /// println!("A 4.7 kΩ resistor has {} Ω or {} MΩ", o, mo);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Resistance {
     ohms: f64,
 }
