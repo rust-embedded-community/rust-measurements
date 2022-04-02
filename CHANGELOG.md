@@ -6,9 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## Changed
+## Added
 
-- Derive Default for all measurement structs
+- Derive `Default` for all measurement structs
 
 ## [0.11.0]
 
