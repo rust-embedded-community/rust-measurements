@@ -280,7 +280,7 @@ impl FromStr for Mass {
                     "dwt" => Mass::from_pennyweights(float_val.parse::<f64>()?),
                     "oz" => Mass::from_ounces(float_val.parse::<f64>()?),
                     "st" => Mass::from_stones(float_val.parse::<f64>()?),
-                    "lbs" => Mass::from_pounds(float_val.parse::<f64>()?),
+                    "lb" | "lbs" => Mass::from_pounds(float_val.parse::<f64>()?),
                     _ => Mass::from_grams(float_val.parse::<f64>()?),
                 },
             );
@@ -602,6 +602,7 @@ mod test {
     fn pounds_from_string() {
         assert_almost_eq(123.0, Mass::from_str("123lbs").unwrap().as_pounds());
         assert_almost_eq(123.0, Mass::from_str("123 lbs").unwrap().as_pounds());
+        assert_almost_eq(123.0, Mass::from_str("123 lb").unwrap().as_pounds());
     }
 
     #[test]
