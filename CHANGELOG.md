@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Added
 
 - Derive `Default` for all measurement structs
-- make `lb` an option for mass in FromStr implementation (works the same as `lbs` does currently)
+- Accept `lb` as a synonym for `lbs` for mass.
 
 ## [0.11.0]
 
