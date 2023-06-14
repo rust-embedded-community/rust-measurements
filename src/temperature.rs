@@ -55,9 +55,9 @@ impl TemperatureDelta {
     }
 
     /// Create a new TemperatureDelta from a floating point value in Fahrenheit
-    pub fn from_fahrenheit(farenheit_degrees: f64) -> Self {
+    pub fn from_fahrenheit(fahrenheit_degrees: f64) -> Self {
         TemperatureDelta {
-            kelvin_degrees: farenheit_degrees / 1.8,
+            kelvin_degrees: fahrenheit_degrees / 1.8,
         }
     }
 
