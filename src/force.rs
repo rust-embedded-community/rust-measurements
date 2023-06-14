@@ -75,7 +75,7 @@ impl Force {
         self.newtons * 1e6
     }
 
-    /// Convert this Force into a floating point value in Milliewtons
+    /// Convert this Force into a floating point value in Millinewtons
     pub fn as_millinewtons(&self) -> f64 {
         self.newtons * 1e3
     }
