@@ -150,16 +150,16 @@ impl Humidity {
 }
 
 impl Measurement for Humidity {
+    fn get_base_units_name(&self) -> &'static str {
+        "%"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.relative_humidity
     }
 
     fn from_base_units(relative_humidity: f64) -> Self {
         Self::from_percent(relative_humidity)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "%"
     }
 }
 

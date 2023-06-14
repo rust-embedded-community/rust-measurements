@@ -90,16 +90,16 @@ impl Angle {
 }
 
 impl Measurement for Angle {
+    fn get_base_units_name(&self) -> &'static str {
+        "rad"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.radians
     }
 
     fn from_base_units(units: f64) -> Self {
         Self::from_radians(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "rad"
     }
 }
 

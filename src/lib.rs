@@ -160,6 +160,10 @@ macro_rules! impl_maths {
 }
 
 impl Measurement for time::Duration {
+    fn get_base_units_name(&self) -> &'static str {
+        "s"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.as_secs() as f64 + (f64::from(self.subsec_nanos()) * 1e-9)
     }
@@ -168,10 +172,6 @@ impl Measurement for time::Duration {
         let subsec_nanos = ((units * 1e9) % 1e9) as u32;
         let secs = units as u64;
         time::Duration::new(secs, subsec_nanos)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "s"
     }
 }
 

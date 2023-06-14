@@ -294,18 +294,6 @@ impl Volume {
 }
 
 impl Measurement for Volume {
-    fn as_base_units(&self) -> f64 {
-        self.liters
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_liters(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "l"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -318,6 +306,18 @@ impl Measurement for Volume {
             ("km\u{00B3}", 1e12),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "l"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.liters
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_liters(units)
     }
 }
 

@@ -277,18 +277,6 @@ impl Area {
 }
 
 impl Measurement for Area {
-    fn as_base_units(&self) -> f64 {
-        self.square_meters
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_square_meters(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "m\u{00B2}"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -302,6 +290,18 @@ impl Measurement for Area {
             ("million km\u{00B2}", 1e12),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "m\u{00B2}"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.square_meters
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_square_meters(units)
     }
 }
 

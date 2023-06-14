@@ -226,18 +226,6 @@ impl Mass {
 }
 
 impl Measurement for Mass {
-    fn as_base_units(&self) -> f64 {
-        self.kilograms
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_kilograms(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "kg"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -251,6 +239,18 @@ impl Measurement for Mass {
             ("million tonnes", 1e9),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "kg"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.kilograms
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_kilograms(units)
     }
 }
 

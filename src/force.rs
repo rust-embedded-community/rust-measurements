@@ -107,18 +107,6 @@ impl Force {
 }
 
 impl Measurement for Force {
-    fn as_base_units(&self) -> f64 {
-        self.newtons
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_newtons(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "N"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -132,6 +120,18 @@ impl Measurement for Force {
             ("TN", 1e12),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "N"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.newtons
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_newtons(units)
     }
 }
 

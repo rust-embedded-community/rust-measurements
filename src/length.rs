@@ -266,18 +266,6 @@ impl Length {
 }
 
 impl Measurement for Length {
-    fn as_base_units(&self) -> f64 {
-        self.meters
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_meters(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "m"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -292,6 +280,18 @@ impl Measurement for Length {
             ("million km", 1e9),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "m"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.meters
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_meters(units)
     }
 }
 

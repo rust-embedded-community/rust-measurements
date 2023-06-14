@@ -54,18 +54,6 @@ impl Resistance {
 }
 
 impl Measurement for Resistance {
-    fn as_base_units(&self) -> f64 {
-        self.ohms
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_ohms(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "\u{2126}"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to Largest
         let list = [
@@ -83,6 +71,18 @@ impl Measurement for Resistance {
             ("E\u{2126}", 1e18),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "\u{2126}"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.ohms
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_ohms(units)
     }
 }
 

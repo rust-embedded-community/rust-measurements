@@ -139,18 +139,6 @@ impl Data {
 }
 
 impl Measurement for Data {
-    fn as_base_units(&self) -> f64 {
-        self.octets
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_octets(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "octets"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -163,6 +151,18 @@ impl Measurement for Data {
             ("EiB", 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "octets"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.octets
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_octets(units)
     }
 }
 

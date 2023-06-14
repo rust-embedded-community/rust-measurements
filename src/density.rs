@@ -110,16 +110,16 @@ impl ::std::ops::Mul<Volume> for Density {
 }
 
 impl Measurement for Density {
+    fn get_base_units_name(&self) -> &'static str {
+        "kg/m\u{00B3}"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.kilograms_per_cubic_meter
     }
 
     fn from_base_units(units: f64) -> Self {
         Self::from_kilograms_per_cubic_meter(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "kg/m\u{00B3}"
     }
 }
 

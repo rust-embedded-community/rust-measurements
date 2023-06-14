@@ -131,18 +131,6 @@ impl Frequency {
 }
 
 impl Measurement for Frequency {
-    fn as_base_units(&self) -> f64 {
-        self.hertz
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_hertz(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "Hz"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to largest
         let list = [
@@ -156,6 +144,18 @@ impl Measurement for Frequency {
             ("THz", 1e12),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "Hz"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.hertz
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_hertz(units)
     }
 }
 

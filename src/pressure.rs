@@ -106,18 +106,6 @@ impl Pressure {
 }
 
 impl Measurement for Pressure {
-    fn as_base_units(&self) -> f64 {
-        self.pascals
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_pascals(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "Pa"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         let list = [
             ("mPa", 1e-3),
@@ -129,6 +117,18 @@ impl Measurement for Pressure {
             ("TPa", 1e12),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "Pa"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.pascals
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_pascals(units)
     }
 }
 

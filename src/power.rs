@@ -116,18 +116,6 @@ impl Power {
 }
 
 impl Measurement for Power {
-    fn as_base_units(&self) -> f64 {
-        self.watts
-    }
-
-    fn from_base_units(units: f64) -> Self {
-        Self::from_watts(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "W"
-    }
-
     fn get_appropriate_units(&self) -> (&'static str, f64) {
         // Smallest to Largest
         let list = [
@@ -145,6 +133,18 @@ impl Measurement for Power {
             ("EW", 1e18),
         ];
         self.pick_appropriate_units(&list)
+    }
+
+    fn get_base_units_name(&self) -> &'static str {
+        "W"
+    }
+
+    fn as_base_units(&self) -> f64 {
+        self.watts
+    }
+
+    fn from_base_units(units: f64) -> Self {
+        Self::from_watts(units)
     }
 }
 

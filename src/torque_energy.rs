@@ -25,6 +25,10 @@ impl std::convert::From<TorqueEnergy> for Energy {
 }
 
 impl Measurement for TorqueEnergy {
+    fn get_base_units_name(&self) -> &'static str {
+        "Nm||J"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.newton_metres
     }
@@ -33,9 +37,5 @@ impl Measurement for TorqueEnergy {
         TorqueEnergy {
             newton_metres: units,
         }
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "Nm||J"
     }
 }

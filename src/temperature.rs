@@ -132,6 +132,10 @@ impl Temperature {
 }
 
 impl Measurement for Temperature {
+    fn get_base_units_name(&self) -> &'static str {
+        "K"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.degrees_kelvin
     }
@@ -139,23 +143,19 @@ impl Measurement for Temperature {
     fn from_base_units(degrees_kelvin: f64) -> Self {
         Self::from_kelvin(degrees_kelvin)
     }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "K"
-    }
 }
 
 impl Measurement for TemperatureDelta {
+    fn get_base_units_name(&self) -> &'static str {
+        "K"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.kelvin_degrees
     }
 
     fn from_base_units(kelvin_degrees: f64) -> Self {
         Self::from_kelvin(kelvin_degrees)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "K"
     }
 }
 

@@ -58,16 +58,16 @@ impl AngularVelocity {
 }
 
 impl Measurement for AngularVelocity {
+    fn get_base_units_name(&self) -> &'static str {
+        "rad/s"
+    }
+
     fn as_base_units(&self) -> f64 {
         self.radians_per_second
     }
 
     fn from_base_units(units: f64) -> Self {
         Self::from_radians_per_second(units)
-    }
-
-    fn get_base_units_name(&self) -> &'static str {
-        "rad/s"
     }
 }
 
