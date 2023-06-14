@@ -12,7 +12,7 @@ pub const WATT_KILOWATT_FACTOR: f64 = 1e-3;
 pub const WATT_MILLIWATT_FACTOR: f64 = 1e3;
 /// Number of µW in a W
 pub const WATT_MICROWATT_FACTOR: f64 = 1e6;
-/// Number of pferdstarken (PS) in a W
+/// Number of Pferdestärken (PS, horsepower) in a W
 pub const WATT_PS_FACTOR: f64 = 1.0 / 735.499;
 
 /// The `Power` struct can be used to deal with energies in a common way.
