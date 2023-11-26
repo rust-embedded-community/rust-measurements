@@ -54,7 +54,7 @@ In your code...
 ```rust
 extern crate measurements;
 
-use measurements::{Length, Pressure, Temperature, Volume, Weight};
+use measurements::{Length, Pressure, Temperature, Volume, Mass};
 
 fn main() {
     // Lengths!
@@ -67,8 +67,8 @@ fn main() {
     let fahrenheit = boiling_water.as_fahrenheit();
     println!("Boiling water measures at {} degrees fahrenheit.", fahrenheit);
 
-    // Weights!
-    let metric_ton = Weight::from_metric_tons(1.0);
+    // Masses!
+    let metric_ton = Mass::from_metric_tons(1.0);
     let united_states_tons = metric_ton.as_short_tons();
     let united_states_pounds = metric_ton.as_pounds();
     println!("One metric ton is {} U.S. tons - that's {} pounds!", united_states_tons, united_states_pounds);
