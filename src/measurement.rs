@@ -1,9 +1,12 @@
-/// The `Measurement` trait and the `implement_measurement!` macro
-/// provides a common way for various measurements to be implemented.
+//! The `Measurement` trait and the `implement_measurement!` macro
+//! provides a common way for various measurements to be implemented.
+///
+/// All measurements implement this.
+///
+/// It provides conversion functions to and from raw numbers.
 ///
 /// # Example
 /// ```
-/// #![no_std]
 /// // Importing the `implement_measurement` macro from the external crate is important
 /// #[macro_use]
 /// extern crate measurements;
@@ -35,16 +38,9 @@
 /// // You should't need it in your own code.
 /// fn main() { }
 /// ```
-
-#[cfg(feature = "no-std")]
-use core as std;
-
-#[cfg(feature = "no-std")]
-use core::num::Float;
-
-/// All measurements implement this.
 ///
-/// It provides conversion functions to and from raw numbers.
+/// *Note*: If you are in a `no_std` environment, you have to
+/// `use core as std;` for the macros to run.
 pub trait Measurement {
     /// Returns a string containing the most appropriate units for this quantity,
     /// and a floating point value representing this quantity in those units.

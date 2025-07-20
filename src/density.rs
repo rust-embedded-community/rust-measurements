@@ -26,7 +26,7 @@ pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
 ///    let mans_weight = Mass::from_stones(12.0);
 ///    let water_volume = mans_weight / body_density;
 ///    println!("{} gallons of water spilled on the floor", water_volume.as_gallons());
-///}
+/// }
 /// ```
 /// # Example2 - converting to ad-hoc units of density
 ///
@@ -40,9 +40,8 @@ pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
 ///    let density: Density = Mass::from_grams(3.0) / Volume:: from_litres(1.0);
 ///    let ounces = (density * Volume::from_quarts(1.0)).as_ounces();
 ///    println!("Answer is {} ounces per quart", ounces);
-///}
+/// }
 /// ```
-
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Density {
