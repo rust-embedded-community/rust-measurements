@@ -73,7 +73,7 @@ impl Density {
 }
 
 // mass / volume = density
-impl ::std::ops::Div<Volume> for Mass {
+impl ::core::ops::Div<Volume> for Mass {
     type Output = Density;
 
     fn div(self, other: Volume) -> Density {
@@ -82,7 +82,7 @@ impl ::std::ops::Div<Volume> for Mass {
 }
 
 // mass / density = volume
-impl ::std::ops::Div<Density> for Mass {
+impl ::core::ops::Div<Density> for Mass {
     type Output = Volume;
 
     fn div(self, other: Density) -> Volume {
@@ -91,7 +91,7 @@ impl ::std::ops::Div<Density> for Mass {
 }
 
 // volume * density = mass
-impl ::std::ops::Mul<Density> for Volume {
+impl ::core::ops::Mul<Density> for Volume {
     type Output = Mass;
 
     fn mul(self, other: Density) -> Mass {
@@ -100,7 +100,7 @@ impl ::std::ops::Mul<Density> for Volume {
 }
 
 // density * volume = mass
-impl ::std::ops::Mul<Volume> for Density {
+impl ::core::ops::Mul<Volume> for Density {
     type Output = Mass;
 
     fn mul(self, other: Volume) -> Mass {

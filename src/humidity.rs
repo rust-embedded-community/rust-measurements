@@ -163,15 +163,15 @@ impl Measurement for Humidity {
     }
 }
 
-impl ::std::cmp::Eq for Humidity {}
-impl ::std::cmp::PartialEq for Humidity {
+impl ::core::cmp::Eq for Humidity {}
+impl ::core::cmp::PartialEq for Humidity {
     fn eq(&self, other: &Self) -> bool {
         self.as_base_units() == other.as_base_units()
     }
 }
 
-impl ::std::cmp::PartialOrd for Humidity {
-    fn partial_cmp(&self, other: &Self) -> Option<::std::cmp::Ordering> {
+impl ::core::cmp::PartialOrd for Humidity {
+    fn partial_cmp(&self, other: &Self) -> Option<::core::cmp::Ordering> {
         self.as_base_units().partial_cmp(&other.as_base_units())
     }
 }

@@ -12,13 +12,13 @@ pub struct TorqueEnergy {
     newton_metres: f64,
 }
 
-impl std::convert::From<TorqueEnergy> for Torque {
+impl core::convert::From<TorqueEnergy> for Torque {
     fn from(t: TorqueEnergy) -> Torque {
         Torque::from_newton_metres(t.newton_metres)
     }
 }
 
-impl std::convert::From<TorqueEnergy> for Energy {
+impl core::convert::From<TorqueEnergy> for Energy {
     fn from(t: TorqueEnergy) -> Energy {
         Energy::from_joules(t.newton_metres)
     }
