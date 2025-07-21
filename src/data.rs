@@ -170,8 +170,7 @@ implement_measurement! { Data }
 
 #[cfg(test)]
 mod test {
-    use data::*;
-    use test_utils::assert_almost_eq;
+    use crate::{data::*, test_utils::assert_almost_eq};
 
     // Metric
     #[test]

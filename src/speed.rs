@@ -114,10 +114,7 @@ implement_measurement! { Speed }
 
 #[cfg(test)]
 mod test {
-    use length::Length;
-    use speed::*;
-    use test_utils::assert_almost_eq;
-    use time::Duration;
+    use crate::{length::Length, speed::*, test_utils::assert_almost_eq, time::Duration};
 
     // Metric
     #[test]

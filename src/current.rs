@@ -100,8 +100,7 @@ implement_measurement! { Current }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use test_utils::assert_almost_eq;
+    use crate::{current::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_amperes() {

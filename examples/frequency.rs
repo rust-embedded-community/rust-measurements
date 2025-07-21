@@ -1,5 +1,3 @@
-extern crate measurements;
-
 fn main() {
     // Sinusiodal Oscilator moves at 5 Hz across 50 mm
     let f = measurements::Frequency::from_hertz(5.0);

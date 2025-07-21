@@ -139,8 +139,7 @@ implement_measurement! { Force }
 
 #[cfg(test)]
 mod test {
-    use force::*;
-    use test_utils::assert_almost_eq;
+    use crate::{force::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn newtons() {

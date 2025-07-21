@@ -1,7 +1,6 @@
 //! Types and constants for handling acceleration.
 
-use super::length;
-use super::measurement::*;
+use crate::{length, measurement::*};
 #[cfg(feature = "from_str")]
 use regex::Regex;
 #[cfg(feature = "from_str")]
@@ -13,7 +12,6 @@ use std::str::FromStr;
 /// # Example
 ///
 /// ```
-/// extern crate measurements;
 /// use measurements::{Acceleration, Length, Speed};
 /// use std::time::Duration;
 ///
@@ -120,15 +118,13 @@ implement_measurement! { Acceleration }
 #[cfg(test)]
 mod test {
 
-    use super::*;
-    use speed::Speed;
-    use test_utils::assert_almost_eq;
+    use crate::{speed::Speed, test_utils::assert_almost_eq, *};
 
     // Metric
     #[test]
     fn speed_over_time() {
         let s1 = Speed::from_meters_per_second(10.0);
-        let t1 = ::time::Duration::new(5, 0);
+        let t1 = crate::time::Duration::new(5, 0);
         let i1 = s1 / t1;
         let r1 = i1.as_meters_per_second_per_second();
         assert_almost_eq(r1, 2.0);

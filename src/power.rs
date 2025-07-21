@@ -152,10 +152,7 @@ implement_measurement! { Power }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use power::*;
-    use test_utils::assert_almost_eq;
-    use voltage::*;
+    use crate::{current::*, power::*, test_utils::assert_almost_eq, voltage::*};
 
     #[test]
     pub fn as_btu_per_minute() {

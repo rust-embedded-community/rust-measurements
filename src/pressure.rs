@@ -137,7 +137,7 @@ implement_measurement! { Pressure }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     #[test]
     fn hectopascals() {

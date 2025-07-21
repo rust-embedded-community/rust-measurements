@@ -1,8 +1,7 @@
 //! Types and constants for handling density.
 
 use super::measurement::*;
-use mass::Mass;
-use volume::Volume;
+use crate::{mass::Mass, volume::Volume};
 
 // Constants, metric
 /// Number of pound per cubic foot in 1 kilograms per cubic meter
@@ -14,33 +13,27 @@ pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
 /// # Example1 - calculating volume from units of mass and density
 ///
 /// ```
-/// extern crate measurements;
 /// use measurements::{Density, Mass, Volume};
 ///
-/// fn main() {
-///    // Q: A 12 stone man hops into a brimming full bath, completely emersing himself.
-///    // How many gallons of water spill on the floor?
-///    // (Assume The human body is roughly about as dense as water - 1 gm/cm³)
-///    //
-///    let body_density: Density = Mass::from_grams(1.0) / Volume:: from_cubic_centimetres(1.0);
-///    let mans_weight = Mass::from_stones(12.0);
-///    let water_volume = mans_weight / body_density;
-///    println!("{} gallons of water spilled on the floor", water_volume.as_gallons());
-/// }
+/// // Q: A 12 stone man hops into a brimming full bath, completely emersing himself.
+/// // How many gallons of water spill on the floor?
+/// // (Assume The human body is roughly about as dense as water - 1 gm/cm³)
+/// //
+/// let body_density: Density = Mass::from_grams(1.0) / Volume:: from_cubic_centimetres(1.0);
+/// let mans_weight = Mass::from_stones(12.0);
+/// let water_volume = mans_weight / body_density;
+/// println!("{} gallons of water spilled on the floor", water_volume.as_gallons());
 /// ```
 /// # Example2 - converting to ad-hoc units of density
 ///
 /// ```
-/// extern crate measurements;
 /// use measurements::{Density, Mass, Volume};
 ///
-/// fn main() {
-///    // Q: what is 3 grams per litre in units of ounces per quart?
-///    //
-///    let density: Density = Mass::from_grams(3.0) / Volume:: from_litres(1.0);
-///    let ounces = (density * Volume::from_quarts(1.0)).as_ounces();
-///    println!("Answer is {} ounces per quart", ounces);
-/// }
+/// // Q: what is 3 grams per litre in units of ounces per quart?
+/// //
+/// let density: Density = Mass::from_grams(3.0) / Volume:: from_litres(1.0);
+/// let ounces = (density * Volume::from_quarts(1.0)).as_ounces();
+/// println!("Answer is {} ounces per quart", ounces);
 /// ```
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
@@ -128,7 +121,7 @@ implement_measurement! { Density }
 mod test {
 
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     // Metric
     #[test]

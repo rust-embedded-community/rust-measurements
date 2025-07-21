@@ -372,8 +372,7 @@ implement_measurement! { Volume }
 
 #[cfg(test)]
 mod test {
-    use test_utils::assert_almost_eq;
-    use volume::*;
+    use crate::{test_utils::assert_almost_eq, volume::*};
 
     // Volume Units
     // Metric

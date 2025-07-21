@@ -72,7 +72,7 @@ implement_measurement! { Torque }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     #[test]
     fn lbf_ft() {

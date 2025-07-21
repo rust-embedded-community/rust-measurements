@@ -294,8 +294,7 @@ implement_measurement! { Mass }
 
 #[cfg(test)]
 mod test {
-    use mass::*;
-    use test_utils::assert_almost_eq;
+    use crate::{mass::*, test_utils::assert_almost_eq};
 
     // Mass Units
     // Metric

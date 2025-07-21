@@ -299,8 +299,7 @@ implement_measurement! { Length }
 
 #[cfg(test)]
 mod test {
-    use length::*;
-    use test_utils::assert_almost_eq;
+    use crate::{length::*, test_utils::assert_almost_eq};
 
     // Metric
     #[test]

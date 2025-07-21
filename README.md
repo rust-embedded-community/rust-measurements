@@ -52,8 +52,6 @@ measurements = "0.11"
 In your code...
 
 ```rust
-extern crate measurements;
-
 use measurements::{Length, Pressure, Temperature, Volume, Mass};
 
 fn main() {

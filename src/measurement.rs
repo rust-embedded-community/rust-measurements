@@ -7,12 +7,8 @@
 ///
 /// # Example
 /// ```
-/// extern crate core;
-/// // Importing the `implement_measurement` macro from the external crate is important
-/// #[macro_use]
-/// extern crate measurements;
-///
-/// use measurements::Measurement;
+/// // Importing the `implement_display` and `implement_measurement` macros from the `measurements` crate
+/// use measurements::{implement_display, implement_measurement, Measurement};
 ///
 ///
 /// struct Cubits {

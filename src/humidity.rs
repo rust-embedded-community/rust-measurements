@@ -1,9 +1,7 @@
 //! Types and constants for handling humidity.
 
 use super::measurement::*;
-use density::Density;
-use pressure::Pressure;
-use temperature::Temperature;
+use crate::{density::Density, pressure::Pressure, temperature::Temperature};
 
 /// The `Humidity` struct can be used to deal with relative humidity
 /// in air in a common way. Relative humidity is an important metric used
@@ -180,8 +178,7 @@ implement_display!(Humidity);
 
 #[cfg(test)]
 mod test {
-    use humidity::*;
-    use test_utils::assert_almost_eq;
+    use crate::{humidity::*, test_utils::assert_almost_eq};
 
     // Humidity Units
     #[test]

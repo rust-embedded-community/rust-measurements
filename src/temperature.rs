@@ -238,8 +238,7 @@ implement_measurement!(TemperatureDelta);
 
 #[cfg(test)]
 mod test {
-    use temperature::*;
-    use test_utils::assert_almost_eq;
+    use crate::{temperature::*, test_utils::assert_almost_eq};
 
     // Temperature Units
     #[test]

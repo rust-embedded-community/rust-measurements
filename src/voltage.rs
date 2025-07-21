@@ -100,10 +100,7 @@ implement_measurement! { Voltage }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use resistance::*;
-    use test_utils::assert_almost_eq;
-    use voltage::*;
+    use crate::{current::*, resistance::*, test_utils::assert_almost_eq, voltage::*};
 
     #[test]
     pub fn as_kilovolts() {

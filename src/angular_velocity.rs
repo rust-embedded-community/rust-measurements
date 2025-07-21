@@ -1,11 +1,11 @@
 //! Types and constants for handling speed of rotation (angular velocity)
 
 use super::measurement::*;
+use crate::PI;
 #[cfg(feature = "from_str")]
 use regex::Regex;
 #[cfg(feature = "from_str")]
 use std::str::FromStr;
-use PI;
 
 /// The 'AngularVelocity' struct can be used to deal with angular velocities in a common way.
 ///
@@ -106,7 +106,7 @@ implement_measurement! { AngularVelocity }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     #[test]
     fn rpm() {

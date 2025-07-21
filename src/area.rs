@@ -359,8 +359,7 @@ implement_measurement! { Area }
 
 #[cfg(test)]
 mod test {
-    use area::*;
-    use test_utils::assert_almost_eq;
+    use crate::{area::*, test_utils::assert_almost_eq};
 
     #[test]
     fn square_meters() {

@@ -1,4 +1,3 @@
-extern crate measurements;
 use measurements::{AngularVelocity, Power};
 
 fn main() {

@@ -118,8 +118,7 @@ implement_measurement! { Energy }
 
 #[cfg(test)]
 mod test {
-    use energy::*;
-    use test_utils::assert_almost_eq;
+    use crate::{energy::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_kcalories() {

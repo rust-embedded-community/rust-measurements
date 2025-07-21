@@ -90,8 +90,7 @@ implement_measurement! { Resistance }
 
 #[cfg(test)]
 mod test {
-    use resistance::*;
-    use test_utils::assert_almost_eq;
+    use crate::{resistance::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_ohms() {
