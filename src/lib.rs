@@ -18,9 +18,6 @@ use std::time;
 #[cfg(feature = "serde")]
 use serde;
 
-#[cfg(feature = "from_str")]
-use regex;
-
 use core::f64::consts::PI;
 
 #[macro_use]
