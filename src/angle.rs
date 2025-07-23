@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// let slice = whole_cake / pieces;
 /// println!("Each slice will be {} degrees", slice.as_degrees());
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Angle {
     radians: f64,

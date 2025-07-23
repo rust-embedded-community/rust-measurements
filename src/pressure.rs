@@ -27,7 +27,7 @@ pub const PASCAL_PSI_FACTOR: f64 = 6894.76;
 /// let mbar = earth.as_millibars();
 /// println!("Atmospheric pressure is {} mbar.", mbar);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Pressure {
     pascals: f64,

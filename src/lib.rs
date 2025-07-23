@@ -15,9 +15,6 @@ use core::time;
 #[cfg(feature = "std")]
 use std::time;
 
-#[cfg(feature = "serde")]
-use serde;
-
 use core::f64::consts::PI;
 
 #[macro_use]

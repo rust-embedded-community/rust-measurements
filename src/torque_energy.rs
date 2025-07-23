@@ -7,7 +7,7 @@ use super::*;
 /// something (which creates a Torque). This struct is what results
 /// from the multiplication, and you have to then convert
 /// it to whichever you want.
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TorqueEnergy {
     newton_metres: f64,
 }

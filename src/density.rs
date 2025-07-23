@@ -35,7 +35,7 @@ pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
 /// let ounces = (density * Volume::from_quarts(1.0)).as_ounces();
 /// println!("Answer is {} ounces per quart", ounces);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Density {
     kilograms_per_cubic_meter: f64,

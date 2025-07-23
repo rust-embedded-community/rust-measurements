@@ -29,7 +29,7 @@ const OCTET_TEBIOCTET_FACTOR: f64 = 1024.0 * 1024.0 * 1024.0 * 1024.0;
 /// let octets = file_size.as_octets();
 /// println!("There are {} octets in that file.", octets);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Data {
     octets: f64,

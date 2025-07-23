@@ -28,7 +28,7 @@ pub const DYNES_PER_NEWTON: f64 = 1e5;
 ///     "One metric ton exerts a force of {} due to gravity",
 ///     force);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Force {
     newtons: f64,

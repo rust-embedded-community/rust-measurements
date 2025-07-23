@@ -27,7 +27,7 @@ pub const WATT_PS_FACTOR: f64 = 1.0 / 735.499;
 /// let k_w = power.as_kilowatts();
 /// println!("A 100.0 hp car produces {} kW", k_w);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Power {
     watts: f64,

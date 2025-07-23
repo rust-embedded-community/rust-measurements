@@ -15,7 +15,7 @@ use super::measurement::*;
 /// let u_a = amperes.as_microamperes();
 /// println!("35 mA correspond to {} A or {} µA", a, u_a);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Current {
     amperes: f64,

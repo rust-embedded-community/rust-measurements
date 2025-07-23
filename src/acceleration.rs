@@ -24,7 +24,7 @@ use std::str::FromStr;
 ///     println!("You accelerated over {} at an average of {}", track, accel);
 ///}
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Acceleration {
     meters_per_second_per_second: f64,

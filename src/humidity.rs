@@ -34,7 +34,7 @@ use crate::{density::Density, pressure::Pressure, temperature::Temperature};
 ///     println!("At {} humidity, air at {} has a dewpoint of {}", humidity, temp, dewpoint);
 ///
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Humidity {
     relative_humidity: f64, // expressed as a percentage
