@@ -120,6 +120,9 @@ mod test {
 
     use crate::{speed::Speed, test_utils::assert_almost_eq, *};
 
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
+
     // Metric
     #[test]
     fn speed_over_time() {
