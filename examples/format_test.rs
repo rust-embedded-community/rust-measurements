@@ -1,4 +1,3 @@
-extern crate measurements;
 use measurements::*;
 
 fn main() {

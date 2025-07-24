@@ -22,7 +22,7 @@ pub const SECONDS_HOURS_FACTOR: f64 = 60.0 * 60.0;
 /// let mph = light.as_miles_per_hour();
 /// println!("The speed of light is {} mph.", mph);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Speed {
     meters_per_second: f64,
@@ -114,10 +114,7 @@ implement_measurement! { Speed }
 
 #[cfg(test)]
 mod test {
-    use length::Length;
-    use speed::*;
-    use test_utils::assert_almost_eq;
-    use time::Duration;
+    use crate::{length::Length, speed::*, test_utils::assert_almost_eq, time::Duration};
 
     // Metric
     #[test]

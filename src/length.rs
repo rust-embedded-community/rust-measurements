@@ -44,7 +44,7 @@ pub const METER_MILE_FACTOR: f64 = 10000.0 / (254.0 * 12.0 * 3.0 * 1760.0);
 /// let meters = football_field.as_meters();
 /// println!("There are {} meters in a football field.", meters);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Length {
     meters: f64,
@@ -299,8 +299,7 @@ implement_measurement! { Length }
 
 #[cfg(test)]
 mod test {
-    use length::*;
-    use test_utils::assert_almost_eq;
+    use crate::{length::*, test_utils::assert_almost_eq};
 
     // Metric
     #[test]

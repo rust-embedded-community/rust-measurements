@@ -13,7 +13,7 @@ use super::measurement::*;
 /// let energy = Energy::from_kcalories(2500.0);
 /// println!("Some say a health adult male should consume {} per day", energy);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Energy {
     joules: f64,
@@ -118,8 +118,7 @@ implement_measurement! { Energy }
 
 #[cfg(test)]
 mod test {
-    use energy::*;
-    use test_utils::assert_almost_eq;
+    use crate::{energy::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_kcalories() {

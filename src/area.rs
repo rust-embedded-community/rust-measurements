@@ -22,7 +22,7 @@ const SQUARE_METER_ACRE_FACTOR: f64 = 1.0 / 4046.86;
 /// let acres = football_field.as_acres();
 /// println!("There are {} acres in a football field.", acres);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Area {
     square_meters: f64,
@@ -318,7 +318,7 @@ impl FromStr for Area {
 
         let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z2\u{00B2}\u{00B5} ]{1,5})\s*$").unwrap();
         if let Some(caps) = re.captures(val) {
-            println!("{:?}", caps);
+            println!("{caps:?}");
             let float_val = caps.get(1).unwrap().as_str();
             return Ok(
                 match caps.get(2).unwrap().as_str().trim().to_lowercase().as_str() {
@@ -359,8 +359,7 @@ implement_measurement! { Area }
 
 #[cfg(test)]
 mod test {
-    use area::*;
-    use test_utils::assert_almost_eq;
+    use crate::{area::*, test_utils::assert_almost_eq};
 
     #[test]
     fn square_meters() {

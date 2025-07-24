@@ -1,5 +1,3 @@
-extern crate measurements;
-
 use measurements::*;
 
 #[test]

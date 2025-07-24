@@ -15,7 +15,7 @@ use super::measurement::*;
 /// let mo = r.as_megaohms();
 /// println!("A 4.7 kΩ resistor has {} Ω or {} MΩ", o, mo);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Resistance {
     ohms: f64,
@@ -90,8 +90,7 @@ implement_measurement! { Resistance }
 
 #[cfg(test)]
 mod test {
-    use resistance::*;
-    use test_utils::assert_almost_eq;
+    use crate::{resistance::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_ohms() {

@@ -57,7 +57,7 @@ pub const KILOGRAM_LONG_TONS_FACTOR: f64 = KILOGRAM_POUNDS_FACTOR / 2240.0;
 ///     "One metric ton is {} U.S. tons - that's {} pounds!",
 ///     united_states_tons, united_states_pounds);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Mass {
     kilograms: f64,
@@ -294,8 +294,7 @@ implement_measurement! { Mass }
 
 #[cfg(test)]
 mod test {
-    use mass::*;
-    use test_utils::assert_almost_eq;
+    use crate::{mass::*, test_utils::assert_almost_eq};
 
     // Mass Units
     // Metric

@@ -1,5 +1,3 @@
-extern crate measurements;
-
 use measurements::test_utils::assert_almost_eq;
 
 #[test]

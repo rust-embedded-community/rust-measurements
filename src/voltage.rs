@@ -15,7 +15,7 @@ use super::measurement::*;
 /// let k_v = volts.as_kilovolts();
 /// println!("A 1.5 V battery has {} mV or {} kV", m_v, k_v);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Voltage {
     volts: f64,
@@ -100,10 +100,7 @@ implement_measurement! { Voltage }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use resistance::*;
-    use test_utils::assert_almost_eq;
-    use voltage::*;
+    use crate::{current::*, resistance::*, test_utils::assert_almost_eq, voltage::*};
 
     #[test]
     pub fn as_kilovolts() {

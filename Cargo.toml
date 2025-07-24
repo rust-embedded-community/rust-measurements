@@ -13,6 +13,7 @@ keywords = ["measurements", "lengths", "weights", "temperatures", "volumes"]
 description = "Handle metric, imperial, and other measurements with ease! Types: Length, Temperature, Weight, Volume, Pressure"
 license = "MIT"
 readme = "README.md"
+edition = "2018"
 
 [features]
 std = []

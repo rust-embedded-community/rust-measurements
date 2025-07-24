@@ -19,7 +19,7 @@ use std::str::FromStr;
 /// let slice = whole_cake / pieces;
 /// println!("Each slice will be {} degrees", slice.as_degrees());
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Angle {
     radians: f64,
@@ -28,7 +28,7 @@ pub struct Angle {
 impl Angle {
     /// Create a new Angle from a floating point value in degrees
     pub fn from_degrees(degrees: f64) -> Self {
-        Angle::from_radians(degrees * ::PI / 180.0)
+        Angle::from_radians(degrees * crate::PI / 180.0)
     }
 
     /// Create a new Angle from a floating point value in radians
@@ -38,7 +38,7 @@ impl Angle {
 
     /// Convert this Angle to a floating point value in degrees
     pub fn as_degrees(&self) -> f64 {
-        self.radians * 180.0 / ::PI
+        self.radians * 180.0 / crate::PI
     }
 
     /// Convert this Angle to a floating point value in radians
@@ -134,9 +134,7 @@ implement_measurement! { Angle }
 
 #[cfg(test)]
 mod test {
-    use angle::*;
-    use std::f64::consts::PI;
-    use test_utils::assert_almost_eq;
+    use crate::{angle::*, test_utils::assert_almost_eq, PI};
 
     #[test]
     fn radians() {

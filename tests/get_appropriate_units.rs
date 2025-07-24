@@ -1,5 +1,3 @@
-extern crate measurements;
-
 use measurements::{mass::Mass, test_utils::assert_almost_eq, Measurement};
 
 // Macro for testing `get_appropriate_units()`.

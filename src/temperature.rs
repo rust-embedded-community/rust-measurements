@@ -18,7 +18,7 @@ use std::str::FromStr;
 /// let fahrenheit = boiling_water.as_fahrenheit();
 /// println!("Boiling water measures at {} degrees fahrenheit.", fahrenheit);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Temperature {
     degrees_kelvin: f64,
@@ -37,7 +37,7 @@ pub struct Temperature {
 /// let difference: TemperatureDelta = boiling_water - frozen_water;
 /// println!("Boiling water is {} above freezing.", difference);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug)]
 pub struct TemperatureDelta {
     kelvin_degrees: f64,
@@ -159,7 +159,7 @@ impl Measurement for TemperatureDelta {
     }
 }
 
-impl ::std::ops::Add<TemperatureDelta> for Temperature {
+impl ::core::ops::Add<TemperatureDelta> for Temperature {
     type Output = Temperature;
 
     fn add(self, other: TemperatureDelta) -> Temperature {
@@ -167,7 +167,7 @@ impl ::std::ops::Add<TemperatureDelta> for Temperature {
     }
 }
 
-impl ::std::ops::Add<Temperature> for TemperatureDelta {
+impl ::core::ops::Add<Temperature> for TemperatureDelta {
     type Output = Temperature;
 
     fn add(self, other: Temperature) -> Temperature {
@@ -175,7 +175,7 @@ impl ::std::ops::Add<Temperature> for TemperatureDelta {
     }
 }
 
-impl ::std::ops::Sub<TemperatureDelta> for Temperature {
+impl ::core::ops::Sub<TemperatureDelta> for Temperature {
     type Output = Temperature;
 
     fn sub(self, other: TemperatureDelta) -> Temperature {
@@ -183,7 +183,7 @@ impl ::std::ops::Sub<TemperatureDelta> for Temperature {
     }
 }
 
-impl ::std::ops::Sub<Temperature> for Temperature {
+impl ::core::ops::Sub<Temperature> for Temperature {
     type Output = TemperatureDelta;
 
     fn sub(self, other: Temperature) -> TemperatureDelta {
@@ -191,15 +191,15 @@ impl ::std::ops::Sub<Temperature> for Temperature {
     }
 }
 
-impl ::std::cmp::Eq for Temperature {}
-impl ::std::cmp::PartialEq for Temperature {
+impl ::core::cmp::Eq for Temperature {}
+impl ::core::cmp::PartialEq for Temperature {
     fn eq(&self, other: &Self) -> bool {
         self.as_base_units() == other.as_base_units()
     }
 }
 
-impl ::std::cmp::PartialOrd for Temperature {
-    fn partial_cmp(&self, other: &Self) -> Option<::std::cmp::Ordering> {
+impl ::core::cmp::PartialOrd for Temperature {
+    fn partial_cmp(&self, other: &Self) -> Option<::core::cmp::Ordering> {
         self.as_base_units().partial_cmp(&other.as_base_units())
     }
 }
@@ -238,8 +238,7 @@ implement_measurement!(TemperatureDelta);
 
 #[cfg(test)]
 mod test {
-    use temperature::*;
-    use test_utils::assert_almost_eq;
+    use crate::{temperature::*, test_utils::assert_almost_eq};
 
     // Temperature Units
     #[test]

@@ -1,9 +1,7 @@
 //! Types and constants for handling humidity.
 
 use super::measurement::*;
-use density::Density;
-use pressure::Pressure;
-use temperature::Temperature;
+use crate::{density::Density, pressure::Pressure, temperature::Temperature};
 
 /// The `Humidity` struct can be used to deal with relative humidity
 /// in air in a common way. Relative humidity is an important metric used
@@ -36,7 +34,7 @@ use temperature::Temperature;
 ///     println!("At {} humidity, air at {} has a dewpoint of {}", humidity, temp, dewpoint);
 ///
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Humidity {
     relative_humidity: f64, // expressed as a percentage
@@ -163,15 +161,15 @@ impl Measurement for Humidity {
     }
 }
 
-impl ::std::cmp::Eq for Humidity {}
-impl ::std::cmp::PartialEq for Humidity {
+impl ::core::cmp::Eq for Humidity {}
+impl ::core::cmp::PartialEq for Humidity {
     fn eq(&self, other: &Self) -> bool {
         self.as_base_units() == other.as_base_units()
     }
 }
 
-impl ::std::cmp::PartialOrd for Humidity {
-    fn partial_cmp(&self, other: &Self) -> Option<::std::cmp::Ordering> {
+impl ::core::cmp::PartialOrd for Humidity {
+    fn partial_cmp(&self, other: &Self) -> Option<::core::cmp::Ordering> {
         self.as_base_units().partial_cmp(&other.as_base_units())
     }
 }
@@ -180,8 +178,7 @@ implement_display!(Humidity);
 
 #[cfg(test)]
 mod test {
-    use humidity::*;
-    use test_utils::assert_almost_eq;
+    use crate::{humidity::*, test_utils::assert_almost_eq};
 
     // Humidity Units
     #[test]

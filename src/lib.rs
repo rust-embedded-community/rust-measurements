@@ -10,21 +10,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(not(feature = "std"))]
-use core as std;
-#[cfg(not(feature = "std"))]
 use core::time;
 
 #[cfg(feature = "std")]
 use std::time;
 
-#[cfg(feature = "serde")]
-#[macro_use]
-extern crate serde;
-
-#[cfg(feature = "from_str")]
-extern crate regex;
-
-use std::f64::consts::PI;
+use core::f64::consts::PI;
 
 #[macro_use]
 mod measurement;
@@ -107,7 +98,7 @@ pub mod test_utils;
 ///     - C = A / B
 macro_rules! impl_maths {
     ($a:ty, $b:ty) => {
-        impl std::ops::Mul<$b> for $b {
+        impl core::ops::Mul<$b> for $b {
             type Output = $a;
 
             fn mul(self, rhs: $b) -> Self::Output {
@@ -115,7 +106,7 @@ macro_rules! impl_maths {
             }
         }
 
-        impl std::ops::Div<$b> for $a {
+        impl core::ops::Div<$b> for $a {
             type Output = $b;
 
             fn div(self, rhs: $b) -> Self::Output {
@@ -125,7 +116,7 @@ macro_rules! impl_maths {
     };
 
     ($a:ty, $b:ty, $c:ty) => {
-        impl std::ops::Mul<$b> for $c {
+        impl core::ops::Mul<$b> for $c {
             type Output = $a;
 
             fn mul(self, rhs: $b) -> Self::Output {
@@ -133,7 +124,7 @@ macro_rules! impl_maths {
             }
         }
 
-        impl std::ops::Mul<$c> for $b {
+        impl core::ops::Mul<$c> for $b {
             type Output = $a;
 
             fn mul(self, rhs: $c) -> Self::Output {
@@ -141,7 +132,7 @@ macro_rules! impl_maths {
             }
         }
 
-        impl std::ops::Div<$c> for $a {
+        impl core::ops::Div<$c> for $a {
             type Output = $b;
 
             fn div(self, rhs: $c) -> Self::Output {
@@ -149,7 +140,7 @@ macro_rules! impl_maths {
             }
         }
 
-        impl std::ops::Div<$b> for $a {
+        impl core::ops::Div<$b> for $a {
             type Output = $c;
 
             fn div(self, rhs: $b) -> Self::Output {
@@ -195,7 +186,7 @@ impl_maths!(TorqueEnergy, Force, Length);
 // Implement the divisions manually (the above macro only implemented the
 // TorqueEnergy / X operations).
 
-impl std::ops::Div<Length> for Torque {
+impl core::ops::Div<Length> for Torque {
     type Output = Force;
 
     fn div(self, rhs: Length) -> Self::Output {
@@ -203,7 +194,7 @@ impl std::ops::Div<Length> for Torque {
     }
 }
 
-impl std::ops::Div<Force> for Torque {
+impl core::ops::Div<Force> for Torque {
     type Output = Length;
 
     fn div(self, rhs: Force) -> Self::Output {
@@ -211,7 +202,7 @@ impl std::ops::Div<Force> for Torque {
     }
 }
 
-impl std::ops::Div<Length> for Energy {
+impl core::ops::Div<Length> for Energy {
     type Output = Force;
 
     fn div(self, rhs: Length) -> Self::Output {
@@ -219,7 +210,7 @@ impl std::ops::Div<Length> for Energy {
     }
 }
 
-impl std::ops::Div<Force> for Energy {
+impl core::ops::Div<Force> for Energy {
     type Output = Length;
 
     fn div(self, rhs: Force) -> Self::Output {

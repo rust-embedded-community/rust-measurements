@@ -1,4 +1,3 @@
-extern crate measurements;
 use measurements::prelude::*;
 
 #[test]

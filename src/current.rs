@@ -15,7 +15,7 @@ use super::measurement::*;
 /// let u_a = amperes.as_microamperes();
 /// println!("35 mA correspond to {} A or {} µA", a, u_a);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Current {
     amperes: f64,
@@ -100,8 +100,7 @@ implement_measurement! { Current }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use test_utils::assert_almost_eq;
+    use crate::{current::*, test_utils::assert_almost_eq};
 
     #[test]
     pub fn as_amperes() {

@@ -1,7 +1,7 @@
 //! Types and constants for handling frequencies.
 
 use super::measurement::*;
-use time;
+use crate::time;
 
 /// Number of nanohertz in a Hz
 pub const HERTZ_NANOHERTZ_FACTOR: f64 = 1e9;
@@ -29,7 +29,7 @@ pub const HERTZ_TERAHERTZ_FACTOR: f64 = 1e-12;
 /// let radio_station = Frequency::from_hertz(101.5e6);
 /// println!("Tune to {}.", radio_station);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Frequency {
     hertz: f64,
@@ -164,8 +164,7 @@ implement_measurement! { Frequency }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
-    use time;
+    use crate::{test_utils::assert_almost_eq, time};
 
     #[test]
     pub fn hertz() {

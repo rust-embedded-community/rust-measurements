@@ -15,7 +15,7 @@ const NEWTON_METRE_POUND_FOOT_FACTOR: f64 = 0.73756326522588;
 /// let engine_torque = Torque::from_pound_foot(250.0);
 /// println!("In metric, that's {} Nm", engine_torque.as_newton_metres());
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Torque {
     newton_metres: f64,
@@ -72,7 +72,7 @@ implement_measurement! { Torque }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     #[test]
     fn lbf_ft() {

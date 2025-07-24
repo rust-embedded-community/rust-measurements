@@ -27,7 +27,7 @@ pub const WATT_PS_FACTOR: f64 = 1.0 / 735.499;
 /// let k_w = power.as_kilowatts();
 /// println!("A 100.0 hp car produces {} kW", k_w);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Power {
     watts: f64,
@@ -152,10 +152,7 @@ implement_measurement! { Power }
 
 #[cfg(test)]
 mod test {
-    use current::*;
-    use power::*;
-    use test_utils::assert_almost_eq;
-    use voltage::*;
+    use crate::{current::*, power::*, test_utils::assert_almost_eq, voltage::*};
 
     #[test]
     pub fn as_btu_per_minute() {

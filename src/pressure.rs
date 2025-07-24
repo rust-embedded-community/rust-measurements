@@ -27,7 +27,7 @@ pub const PASCAL_PSI_FACTOR: f64 = 6894.76;
 /// let mbar = earth.as_millibars();
 /// println!("Atmospheric pressure is {} mbar.", mbar);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Pressure {
     pascals: f64,
@@ -137,7 +137,7 @@ implement_measurement! { Pressure }
 #[cfg(test)]
 mod test {
     use super::*;
-    use test_utils::assert_almost_eq;
+    use crate::test_utils::assert_almost_eq;
 
     #[test]
     fn hectopascals() {

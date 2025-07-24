@@ -18,7 +18,7 @@ use std::str::FromStr;
 /// let beers = gallon / pint;
 /// println!("A gallon of beer will pour {} pints!", beers);
 /// ```
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Volume {
     liters: f64,
@@ -372,8 +372,7 @@ implement_measurement! { Volume }
 
 #[cfg(test)]
 mod test {
-    use test_utils::assert_almost_eq;
-    use volume::*;
+    use crate::{test_utils::assert_almost_eq, volume::*};
 
     // Volume Units
     // Metric
