@@ -7,14 +7,15 @@ name: Build
 
 env:
   RUSTFLAGS: '--deny warnings'
+  MSRV: 1.76
 
 jobs:
   build-std:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable]
-        FEATURES: ['', 'from_str', 'std', 'serde']
+        FEATURES: ['', 'from_str', 'std', 'serde', 'regex']
+        TARGET: ['x86_64-unknown-linux-gnu']
 
         include:
           # Test nightly but don't fail
@@ -22,27 +23,20 @@ jobs:
             experimental: true
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: ${{ env.MSRV }}
           target: ${{ matrix.TARGET }}
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --target=x86_64-unknown-linux-gnu --features=${{ matrix.FEATURES }}
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --target=x86_64-unknown-linux-gnu --features=${{ matrix.FEATURES }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
+      - name: Test std
+        run: cargo test --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
 
   build-no-std:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable]
         TARGET: [thumbv6m-none-eabi, thumbv7m-none-eabi]
 
         include:
@@ -52,47 +46,37 @@ jobs:
             TARGET: x86_64-unknown-linux-gnu
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: ${{ env.MSRV }}
           target: ${{ matrix.TARGET }}
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --target=${{ matrix.TARGET }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
 
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
+          toolchain: ${{ env.MSRV }}
+          target: ${{ matrix.TARGET }}
           components: rustfmt
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+      - name: Format
+        run: cargo fmt --all -- --check
 
   clippy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        FEATURES: ['', 'from_str', 'std']
+        FEATURES: ['', 'from_str', 'std', 'serde', 'regex']
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: 1.76 # clippy is too much of a moving target at the moment
-          override: true
+          toolchain: ${{ env.MSRV }}
+          target: ${{ matrix.TARGET }}
           components: clippy
-      - uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --features=${{ matrix.FEATURES }}
+      - name: Clippy
+        run: cargo clippy --features=${{ matrix.FEATURES }} -- -D warnings
