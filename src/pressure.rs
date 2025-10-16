@@ -2,7 +2,7 @@
 
 use super::measurement::*;
 
-/// Number of Pascals in an atomosphere
+/// Number of Pascals in an atmosphere
 pub const PASCAL_ATMOSPHERE_FACTOR: f64 = 101_325.0;
 /// Number of Pascals in a hectopascal
 pub const PASCAL_HECTOPASCAL_FACTOR: f64 = 100.0;
@@ -14,8 +14,12 @@ pub const PASCAL_MILLIBAR_FACTOR: f64 = 100.0;
 pub const PASCAL_BAR_FACTOR: f64 = 100_000.0;
 /// Number of Pascals in a PSI
 pub const PASCAL_PSI_FACTOR: f64 = 6894.76;
+/// Number of Pascals in a Torr
+pub const PASCAL_TORR_FACTOR: f64 = PASCAL_ATMOSPHERE_FACTOR / 760.0;
+/// Number of Pascals in a millitorr
+pub const PASCAL_MILLITORR_FACTOR: f64 = PASCAL_TORR_FACTOR / 1000.0;
 
-/// The `Pressure` struct can be used to deal with presssures in a common way.
+/// The `Pressure` struct can be used to deal with pressures in a common way.
 /// Common metric and imperial units are supported.
 ///
 /// # Example
@@ -39,7 +43,7 @@ impl Pressure {
         Pressure { pascals }
     }
 
-    /// Create new Pressure from floating point value in hectopascals (hPA)
+    /// Create new Pressure from floating point value in hectopascals (hPa)
     pub fn from_hectopascals(hectopascals: f64) -> Pressure {
         Self::from_pascals(hectopascals * PASCAL_HECTOPASCAL_FACTOR)
     }
@@ -67,6 +71,17 @@ impl Pressure {
     /// Create new Pressure from floating point value in Atmospheres
     pub fn from_atmospheres(atmospheres: f64) -> Pressure {
         Self::from_pascals(atmospheres * PASCAL_ATMOSPHERE_FACTOR)
+    }
+
+    /// Create new Pressure from floating point value in Torr (also often referred to as mmHg)
+    pub fn from_torrs(torrs: f64) -> Pressure {
+        Self::from_pascals(torrs * PASCAL_TORR_FACTOR)
+    }
+
+    /// Create new Pressure from floating point value in millitorr (mTorr, also often referred to
+    /// as microns for µmHg)
+    pub fn from_millitorrs(millitorrs: f64) -> Pressure {
+        Self::from_pascals(millitorrs * PASCAL_MILLITORR_FACTOR)
     }
 
     /// Convert this Pressure into a floating point value in Pascals
@@ -102,6 +117,17 @@ impl Pressure {
     /// Convert this Pressure into a floating point value in Atmospheres
     pub fn as_atmospheres(&self) -> f64 {
         self.pascals / PASCAL_ATMOSPHERE_FACTOR
+    }
+
+    /// Convert this Pressure into a floating point value in Torr (also often referred to as mmHg)
+    pub fn as_torrs(&self) -> f64 {
+        self.pascals / PASCAL_TORR_FACTOR
+    }
+
+    /// Convert this Pressure into a floating point value in millitorr (mTorr, also often referred
+    /// to as microns for µmHg)
+    pub fn as_millitorrs(&self) -> f64 {
+        self.pascals / PASCAL_MILLITORR_FACTOR
     }
 }
 
@@ -199,6 +225,28 @@ mod test {
         let t = Pressure::from_psi(100.0);
         let o = t.as_pascals();
         assert_almost_eq(o, 689476.9760513823);
+    }
+
+    #[test]
+    fn torr() {
+        let t = Pressure::from_pascals(100.0);
+        let o = t.as_torrs();
+        assert_almost_eq(o, 0.7500617);
+
+        let t = Pressure::from_torrs(100.0);
+        let o = t.as_pascals();
+        assert_almost_eq(o, 13332.24);
+    }
+
+    #[test]
+    fn millitorr() {
+        let t = Pressure::from_pascals(100.0);
+        let o = t.as_millitorrs();
+        assert_almost_eq(o, 750.0617);
+
+        let t = Pressure::from_millitorrs(100.0);
+        let o = t.as_pascals();
+        assert_almost_eq(o, 13.33224);
     }
 
     // Traits
