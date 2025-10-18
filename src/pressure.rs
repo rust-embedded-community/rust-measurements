@@ -18,6 +18,8 @@ pub const PASCAL_PSI_FACTOR: f64 = 6894.76;
 pub const PASCAL_TORR_FACTOR: f64 = PASCAL_ATMOSPHERE_FACTOR / 760.0;
 /// Number of Pascals in a millitorr
 pub const PASCAL_MILLITORR_FACTOR: f64 = PASCAL_TORR_FACTOR / 1000.0;
+/// Number of Pascals in mmHg
+pub const PASCAL_MMHG_FACTOR: f64 = 133.322387415;
 
 /// The `Pressure` struct can be used to deal with pressures in a common way.
 /// Common metric and imperial units are supported.
@@ -73,15 +75,19 @@ impl Pressure {
         Self::from_pascals(atmospheres * PASCAL_ATMOSPHERE_FACTOR)
     }
 
-    /// Create new Pressure from floating point value in Torr (also often referred to as mmHg)
+    /// Create new Pressure from floating point value in Torr
     pub fn from_torrs(torrs: f64) -> Pressure {
         Self::from_pascals(torrs * PASCAL_TORR_FACTOR)
     }
 
-    /// Create new Pressure from floating point value in millitorr (mTorr, also often referred to
-    /// as microns for µmHg)
+    /// Create new Pressure from floating point value in millitorr (mTorr)
     pub fn from_millitorrs(millitorrs: f64) -> Pressure {
         Self::from_pascals(millitorrs * PASCAL_MILLITORR_FACTOR)
+    }
+
+    /// Create new Pressure from floating point value in millimeter of mercury (mmHg)
+    pub fn from_millimeter_mercury(mmhg: f64) -> Pressure {
+        Self::from_pascals(mmhg * PASCAL_MMHG_FACTOR)
     }
 
     /// Convert this Pressure into a floating point value in Pascals
@@ -119,15 +125,19 @@ impl Pressure {
         self.pascals / PASCAL_ATMOSPHERE_FACTOR
     }
 
-    /// Convert this Pressure into a floating point value in Torr (also often referred to as mmHg)
+    /// Convert this Pressure into a floating point value in Torr
     pub fn as_torrs(&self) -> f64 {
         self.pascals / PASCAL_TORR_FACTOR
     }
 
-    /// Convert this Pressure into a floating point value in millitorr (mTorr, also often referred
-    /// to as microns for µmHg)
+    /// Convert this Pressure into a floating point value in millitorr (mTorr)
     pub fn as_millitorrs(&self) -> f64 {
         self.pascals / PASCAL_MILLITORR_FACTOR
+    }
+
+    /// Convert this Pressure into a floating point value in millimeter of mercury (mmHg)
+    pub fn as_millimeter_mercury(&self) -> f64 {
+        self.pascals / PASCAL_MMHG_FACTOR
     }
 }
 
@@ -247,6 +257,17 @@ mod test {
         let t = Pressure::from_millitorrs(100.0);
         let o = t.as_pascals();
         assert_almost_eq(o, 13.33224);
+    }
+
+    #[test]
+    fn mmhg() {
+        let t = Pressure::from_pascals(100.0);
+        let o = t.as_millimeter_mercury();
+        assert_almost_eq(o, 0.7500615758);
+
+        let t = Pressure::from_millimeter_mercury(100.0);
+        let o = t.as_pascals();
+        assert_almost_eq(o, 13332.2387415);
     }
 
     // Traits
