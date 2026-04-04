@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/rust-embedded-community/rust-measurements/workflows/Build/badge.svg)](https://github.com/rust-embedded-community/rust-measurements/actions?query=workflow%3ABuild)
 
-### Why should I care? I already have numbers...
+## Why should I care? I already have numbers...
 
 Working with units can be very error prone.
 If one person is working in feet and one person is working in meters, what happens?
@@ -10,13 +10,13 @@ If one person is working in feet and one person is working in meters, what happe
 Doing all of your math in raw numerical types can be unsafe and downright confusing.
 What can we do to help?
 
-### Typed measurements to the rescue!
+## Typed measurements to the rescue!
 
 Working in typed measurements increases safety by dealing with what you really care about: units of measure.
 
 Conversions to and from different units are simple, and operator overrides allow you to work with the measurements directly.
 
-### Currently available measurement types
+## Currently available measurement types
 
 - Acceleration
 - Angle
@@ -40,7 +40,7 @@ Conversions to and from different units are simple, and operator overrides allow
 - Voltage
 - Volume
 
-### Examples
+## Examples
 
 In your Cargo.toml add the dependency...
 
@@ -83,7 +83,7 @@ fn main() {
 }
 ```
 
-### Features
+## Features
 
 The crate contains few features to disable or enable certain functionalities:
 
@@ -91,6 +91,19 @@ The crate contains few features to disable or enable certain functionalities:
     * Enables functionality that Rust standard library provides instead of using `libm` for some math functions
 * from_str
     * Allows creating measurement units from string input
+
+## Licence
+
+This project is licensed under the MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>).
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally
+submitted for inclusion in the work by you, as defined in the Apache-2.0
+license, shall be licensed as above, without any additional terms or
+conditions.
+
+Contributions must be in accordance with the notices in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 --------------------------------------
 
