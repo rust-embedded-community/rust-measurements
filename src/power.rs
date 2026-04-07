@@ -8,6 +8,8 @@ pub const WATT_HORSEPOWER_FACTOR: f64 = 1.0 / 745.6998715822702;
 pub const WATT_BTU_MIN_FACTOR: f64 = 1.0 / 17.58426666666667;
 /// Number of kW in a W
 pub const WATT_KILOWATT_FACTOR: f64 = 1e-3;
+/// Number of MW in a W
+pub const WATT_MEGAWATT_FACTOR: f64 = 1e-6;
 /// Number of mW in a W
 pub const WATT_MILLIWATT_FACTOR: f64 = 1e3;
 /// Number of µW in a W
@@ -74,6 +76,11 @@ impl Power {
         Self::from_watts(kw / WATT_KILOWATT_FACTOR)
     }
 
+    /// Create a new Power from a floating point value in Megawatts (kW)
+    pub fn from_megawatts(kw: f64) -> Power {
+        Self::from_watts(kw / WATT_MEGAWATT_FACTOR)
+    }
+
     /// Convert this Power into a floating point value in Watts
     pub fn as_watts(&self) -> f64 {
         self.watts
@@ -102,6 +109,11 @@ impl Power {
     /// Convert this Power into a floating point value in kilowatts (kW)
     pub fn as_kilowatts(&self) -> f64 {
         self.watts * WATT_KILOWATT_FACTOR
+    }
+
+    /// Convert this Power into a floating point value in megawatts (MW)
+    pub fn as_megawatts(&self) -> f64 {
+        self.watts * WATT_MEGAWATT_FACTOR
     }
 
     /// Convert this Power into a floating point value in milliwatts (mW)
@@ -187,6 +199,18 @@ mod test {
         let r2 = i2.as_kilowatts();
 
         assert_almost_eq(r1, 100000.0);
+        assert_almost_eq(r2, 0.1);
+    }
+
+    #[test]
+    pub fn as_megawatts() {
+        let i1 = Power::from_megawatts(100.0);
+        let r1 = i1.as_watts();
+
+        let i2 = Power::from_watts(100_000.0);
+        let r2 = i2.as_megawatts();
+
+        assert_almost_eq(r1, 100_000_000.0);
         assert_almost_eq(r2, 0.1);
     }
 
