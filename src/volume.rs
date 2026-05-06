@@ -26,6 +26,8 @@ pub struct Volume {
 
 /// Number of Milliliters in a litre
 pub const LITER_MILLILITERS_FACTOR: f64 = 1000.0;
+/// Number of Cubic Millimeters in a litre
+pub const LITER_CUBIC_MILLIMETER_FACTOR: f64 = 1_000_000.0;
 /// Number of Cubic Centimeters in a litre
 pub const LITER_CUBIC_CENTIMETER_FACTOR: f64 = 1000.0;
 /// Number of Cubic Meters in a litre
@@ -70,6 +72,16 @@ impl Volume {
     /// Create a new Volume from a floating point value in Litres (l)
     pub fn from_litres(liters: f64) -> Self {
         Self::from_liters(liters)
+    }
+
+    /// Create a new Volume from a floating point value in Cubic Millimeters (mm³)
+    pub fn from_cubic_millimeters(cubic_millimeters: f64) -> Self {
+        Self::from_liters(cubic_millimeters / LITER_CUBIC_MILLIMETER_FACTOR)
+    }
+
+    /// Create a new Volume from a floating point value in Cubic Millimetres (mm³)
+    pub fn from_cubic_millimetres(cubic_millimetres: f64) -> Self {
+        Self::from_cubic_millimeters(cubic_millimetres)
     }
 
     /// Create a new Volume from a floating point value in Cubic Centimeters (cc or cm³)
@@ -175,6 +187,16 @@ impl Volume {
     /// Create a new Volume from a floating point value in Cubic Yards (yd³)
     pub fn from_cubic_yards(cubic_yards: f64) -> Self {
         Self::from_liters(cubic_yards / LITER_CUBIC_YARD_FACTOR)
+    }
+
+    /// Convert Volume to a floating point value in Cubic Millimeters (mm³)
+    pub fn as_cubic_millimeters(&self) -> f64 {
+        self.liters * LITER_CUBIC_MILLIMETER_FACTOR
+    }
+
+    /// Convert Volume to a floating point value in Cubic Millimetres (mm³)
+    pub fn as_cubic_millimetres(&self) -> f64 {
+        self.as_cubic_millimeters()
     }
 
     /// Convert Volume to a floating point value in Cubic Centimeters (cc or cm³)
@@ -341,6 +363,9 @@ impl FromStr for Volume {
                     "cm3" | "cm\u{00b3}" => {
                         Volume::from_cubic_centimeters(float_val.parse::<f64>()?)
                     }
+                    "mm3" | "mm\u{00b3}" => {
+                        Volume::from_cubic_millimeters(float_val.parse::<f64>()?)
+                    }
                     "ft3" | "ft\u{00b3}" => Volume::from_cubic_feet(float_val.parse::<f64>()?),
                     "yd3" | "yd\u{00b3}" => Volume::from_cubic_yards(float_val.parse::<f64>()?),
                     "in3" | "in\u{00b3}" => Volume::from_cubic_inches(float_val.parse::<f64>()?),
@@ -392,6 +417,17 @@ mod test {
         let t = Volume::from_cubic_centimeters(1000.0);
         let o = t.as_litres();
         assert_almost_eq(o, 1.0);
+    }
+
+    #[test]
+    fn cubic_millimeters() {
+        let t = Volume::from_litres(0.5);
+        let o = t.as_cubic_millimeters();
+        assert_almost_eq(o, 500000.0);
+
+        let t = Volume::from_cubic_millimeters(500000.0);
+        let o = t.as_litres();
+        assert_almost_eq(o, 0.5);
     }
 
     #[test]
@@ -862,6 +898,22 @@ mod test {
         let v = Volume::from_str("10");
         assert!(v.is_ok());
         assert_almost_eq(10.0, v.unwrap().as_liters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn mm3_from_str() {
+        let v = Volume::from_str("10mm3");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_millimeters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn mm3_superscript_from_str() {
+        let v = Volume::from_str("10mm³");
+        assert!(v.is_ok());
+        assert_almost_eq(10.0, v.unwrap().as_cubic_millimeters());
     }
 
     #[test]
