@@ -87,6 +87,9 @@ pub use data::Data;
 mod torque_energy;
 pub use torque_energy::TorqueEnergy;
 
+pub mod fraction;
+pub use fraction::Fraction;
+
 pub mod prelude;
 
 pub mod test_utils;
