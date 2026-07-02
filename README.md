@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/rust-embedded-community/rust-measurements/workflows/Build/badge.svg)](https://github.com/rust-embedded-community/rust-measurements/actions?query=workflow%3ABuild)
 
-## Why should I care? I already have numbers...
+## Why should I care? I already have numbers
 
 Working with units can be very error prone.
 If one person is working in feet and one person is working in meters, what happens?
@@ -10,7 +10,7 @@ If one person is working in feet and one person is working in meters, what happe
 Doing all of your math in raw numerical types can be unsafe and downright confusing.
 What can we do to help?
 
-## Typed measurements to the rescue!
+## Typed measurements to the rescue
 
 Working in typed measurements increases safety by dealing with what you really care about: units of measure.
 
@@ -27,6 +27,7 @@ Conversions to and from different units are simple, and operator overrides allow
 - Density
 - Energy
 - Force
+- Fraction (percent, permil, etc)
 - Frequency
 - Length
 - Humidity
@@ -87,10 +88,10 @@ fn main() {
 
 The crate contains few features to disable or enable certain functionalities:
 
-* `std`
-    * Enables functionality that Rust standard library provides instead of using `libm` for some math functions
-* from_str
-    * Allows creating measurement units from string input
+- `std`
+  - Enables functionality that Rust standard library provides instead of using `libm` for some math functions
+- from_str
+  - Allows creating measurement units from string input
 
 ## Licence
 
@@ -111,5 +112,5 @@ Contributions must be in accordance with the notices in [CONTRIBUTING.md](./CONT
 
 I am by no means a measurement or math expert, I simply wanted to do something useful while learning Rust. Thank you to these sites and their authors for the great reference material used in building this library.
 
-  - http://www.metric-conversions.org
-  - http://www.conversion-metric.org
+- <http://www.metric-conversions.org>
+- <http://www.conversion-metric.org>
