@@ -227,7 +227,7 @@ impl FromStr for Fraction {
             return Ok(Fraction::from_decimal(0.0));
         }
 
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z . % ‰ ‱]{1,10}[0-9³]{0,1})\s*$").unwrap();
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z % ‰ ‱]{1,9})\s*$").unwrap();
         if let Some(caps) = re.captures(val) {
             let float_val = caps.get(1).unwrap().as_str();
             return Ok(
@@ -745,14 +745,11 @@ mod test {
         let f = Fraction::from_permil(1.0);
 
         let res1 = u * f;
-
-        let u = crate::TorqueEnergy::from_base_units(1.0);
         let res2 = f * u;
 
         assert_almost_eq(res1.as_base_units(), 0.001);
         assert_almost_eq(res2.as_base_units(), 0.001);
 
-        let u = crate::TorqueEnergy::from_base_units(1.0);
         let res3 = u / f;
 
         assert_almost_eq(res3.as_base_units(), 1_000.0);
