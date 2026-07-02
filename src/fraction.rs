@@ -1,10 +1,9 @@
 //! Types and constants for handling fractions
 
 use super::measurement::*;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// The 'Fraction' struct can be used to deal with fractions in a common way.
 ///
@@ -216,42 +215,24 @@ impl_math_fractions! {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Fraction {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new fraction from a string.
-    ///
-    /// Plain numbers in string are considered to be decimal values.
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Fraction::from_decimal(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z % ‰ ‱]{1,9})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "%" | "percent" => Fraction::from_percent(float_val.parse::<f64>()?),
-                    "‰" | "permil" => Fraction::from_permil(float_val.parse::<f64>()?),
-                    "‱" | "permyriad" => Fraction::from_permyriad(float_val.parse::<f64>()?),
-                    "pcm" => Fraction::from_pcm(float_val.parse::<f64>()?),
-                    "ppm" => Fraction::from_ppm(float_val.parse::<f64>()?),
-                    "ppb" => Fraction::from_ppb(float_val.parse::<f64>()?),
-                    "ppt" => Fraction::from_ppt(float_val.parse::<f64>()?),
-                    "ppq" => Fraction::from_ppq(float_val.parse::<f64>()?),
-                    _ => Fraction::from_decimal(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Fraction::from_decimal(val.parse::<f64>()?))
-    }
-}
+impl_from_str!(
+    Fraction,
+    Fraction::from_decimal,
+    (Fraction::from_percent, "%", "percent"),
+    (Fraction::from_permil, "‰", "permil"),
+    (Fraction::from_permyriad, "‱", "permyriad"),
+    (Fraction::from_pcm, "pcm"),
+    (Fraction::from_ppm, "ppm"),
+    (Fraction::from_ppb, "ppb"),
+    (Fraction::from_ppt, "ppt"),
+    (Fraction::from_ppq, "ppq"),
+);
 
 #[cfg(test)]
 mod test {
     use crate::{fraction::*, test_utils::assert_almost_eq};
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     #[test]
     fn as_decimal() {

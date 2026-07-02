@@ -167,3 +167,41 @@ macro_rules! implement_measurement {
         }
     )*)
 }
+
+/// This macro allows implementing `FromStr` for a given measurement without having to write manual
+/// matchers.
+#[macro_export]
+#[cfg(feature = "from_str")]
+macro_rules! impl_from_str {
+    ($t:ty, $d:path, $(($f:path, $($s:expr),+)),+ $(,)?) => {
+        impl ::std::str::FromStr for $t {
+            type Err = ::std::num::ParseFloatError;
+
+            fn from_str(val: &str) -> Result<Self, Self::Err> {
+                // No value provided: return 0.0 in base unit.
+                if val.is_empty() {
+                    return Ok($d(0.0));
+                }
+
+                let err = match val.trim().parse::<f64>() {
+                    Ok(flt) => return Ok($d(flt)),  // assume base unit
+                    Err(e) => e,
+                };
+
+                // Loop trough all tuples (from_xxx path, "&str 1").
+                $(
+                    // Loop through all unit strings.
+                    $(
+                        if let Some(numb) = val.strip_suffix($s) {
+                            if let Ok(flt) = numb.trim().parse::<f64>() {
+                                return Ok($f(flt));
+                            }
+                        }
+                    )+
+                )+
+
+                Err(err)
+            }
+        }
+    };
+}
