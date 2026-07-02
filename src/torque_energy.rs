@@ -8,6 +8,7 @@ use super::*;
 /// from the multiplication, and you have to then convert
 /// it to whichever you want.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct TorqueEnergy {
     newton_metres: f64,
 }
