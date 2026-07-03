@@ -91,15 +91,15 @@ impl FromStr for Acceleration {
             return Ok(Acceleration::from_metres_per_second_per_second(0.0));
         }
 
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([ftmps -1]{1,6})\s*$").unwrap();
+        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([ftmps -2 ²]{1,6})\s*$").unwrap();
         if let Some(caps) = re.captures(val) {
             let float_val = caps.get(1).unwrap().as_str();
             return Ok(
                 match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "m/s" | "m s-1" => {
+                    "m/s2" | "m/s²" | "m s-2" => {
                         Acceleration::from_meters_per_second_per_second(float_val.parse::<f64>()?)
                     }
-                    "ft/s" | "fps" | "ft s-1" => {
+                    "ft/s2" | "ft/s²" | "fps2" | "ft s-2" => {
                         Acceleration::from_feet_per_second_per_second(float_val.parse::<f64>()?)
                     }
                     _ => Acceleration::from_meters_per_second_per_second(val.parse::<f64>()?),
@@ -198,7 +198,16 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn meters_per_second_str() {
-        let t = Acceleration::from_str(" 12.0m/s");
+        let t = Acceleration::from_str(" 12.0m/s2");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_meters_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn meters_per_second_superscript_str() {
+        let t = Acceleration::from_str(" 12.0m/s²");
         assert!(t.is_ok());
         let o = t.unwrap().as_meters_per_second_per_second();
         assert_almost_eq(12.0, o);
@@ -207,7 +216,7 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn meters_per_second_minus_str() {
-        let t = Acceleration::from_str("12.0 m s-1");
+        let t = Acceleration::from_str("12.0 m s-2");
         assert!(t.is_ok());
         let o = t.unwrap().as_meters_per_second_per_second();
         assert_almost_eq(12.0, o);
@@ -216,7 +225,16 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn feet_per_second_str() {
-        let t = Acceleration::from_str(" 12.0ft/s");
+        let t = Acceleration::from_str(" 12.0ft/s2");
+        assert!(t.is_ok());
+        let o = t.unwrap().as_feet_per_second_per_second();
+        assert_almost_eq(12.0, o);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn feet_per_second_superscript_str() {
+        let t = Acceleration::from_str(" 12.0ft/s²");
         assert!(t.is_ok());
         let o = t.unwrap().as_feet_per_second_per_second();
         assert_almost_eq(12.0, o);
@@ -225,7 +243,7 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn feet_per_second_fps_str() {
-        let t = Acceleration::from_str(" 12.0fps");
+        let t = Acceleration::from_str(" 12.0fps2");
         assert!(t.is_ok());
         let o = t.unwrap().as_feet_per_second_per_second();
         assert_almost_eq(12.0, o);
@@ -234,7 +252,7 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn feet_per_second_minus_str() {
-        let t = Acceleration::from_str("12.0 ft s-1");
+        let t = Acceleration::from_str("12.0 ft s-2");
         assert!(t.is_ok());
         let o = t.unwrap().as_feet_per_second_per_second();
         assert_almost_eq(12.0, o);
