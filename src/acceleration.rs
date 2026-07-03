@@ -92,7 +92,6 @@ impl FromStr for Acceleration {
         }
 
         let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([ftmps -2 ²]{1,6})\s*$").unwrap();
-        dbg!(&re);
         if let Some(caps) = re.captures(val) {
             let float_val = caps.get(1).unwrap().as_str();
             return Ok(
