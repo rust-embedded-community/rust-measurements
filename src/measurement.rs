@@ -192,7 +192,7 @@ macro_rules! impl_from_str {
                 $(
                     // Loop through all unit strings.
                     $(
-                        if let Some(numb) = val.strip_suffix($s) {
+                        if let Some(numb) = val.trim().to_lowercase().strip_suffix($s.to_lowercase().as_str()) {
                             if let Ok(flt) = numb.trim().parse::<f64>() {
                                 return Ok($f(flt));
                             }

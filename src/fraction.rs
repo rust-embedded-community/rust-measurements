@@ -215,7 +215,7 @@ impl_math_fractions! {
 }
 
 #[cfg(feature = "from_str")]
-impl_from_str!(
+impl_from_str! {
     Fraction,
     Fraction::from_decimal,
     (Fraction::from_percent, "%", "percent"),
@@ -226,7 +226,7 @@ impl_from_str!(
     (Fraction::from_ppb, "ppb"),
     (Fraction::from_ppt, "ppt"),
     (Fraction::from_ppq, "ppq"),
-);
+}
 
 #[cfg(test)]
 mod test {

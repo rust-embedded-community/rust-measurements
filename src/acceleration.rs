@@ -1,10 +1,9 @@
 //! Types and constants for handling acceleration.
 
 use crate::{length, measurement::*};
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// The `Acceleration` struct can be used to deal with Accelerations in a common way.
 /// Common metric and imperial units are supported.
@@ -81,36 +80,22 @@ impl Measurement for Acceleration {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Acceleration {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new Acceleration from a string
-    /// Plain numbers in string are considered to be meters per second
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Acceleration::from_metres_per_second_per_second(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([ftmps -2 ²]{1,6})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "m/s2" | "m/s²" | "m s-2" => {
-                        Acceleration::from_meters_per_second_per_second(float_val.parse::<f64>()?)
-                    }
-                    "ft/s2" | "ft/s²" | "fps2" | "ft s-2" => {
-                        Acceleration::from_feet_per_second_per_second(float_val.parse::<f64>()?)
-                    }
-                    _ => Acceleration::from_meters_per_second_per_second(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Acceleration::from_meters_per_second_per_second(
-            val.parse::<f64>()?,
-        ))
-    }
+impl_from_str! {
+    Acceleration,
+    Acceleration::from_meters_per_second_per_second,
+    (
+        Acceleration::from_meters_per_second_per_second,
+        "m/s2",
+        "m/s²",
+        "m s-2"
+    ),
+    (
+        Acceleration::from_feet_per_second_per_second,
+        "ft/s2",
+        "ft/s²",
+        "fps2",
+        "ft s-2"
+    ),
 }
 
 implement_measurement! { Acceleration }

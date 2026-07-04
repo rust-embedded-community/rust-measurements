@@ -2,10 +2,9 @@
 
 use super::measurement::*;
 use crate::PI;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// The 'AngularVelocity' struct can be used to deal with angular velocities in a common way.
 ///
@@ -72,33 +71,12 @@ impl Measurement for AngularVelocity {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for AngularVelocity {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new AngularVelocity from a string
-    /// Plain numbers in string are considered to be radians per second
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(AngularVelocity::from_radians_per_second(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([radspmhz/]{1,5})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "rad/s" => AngularVelocity::from_radians_per_second(float_val.parse::<f64>()?),
-                    "rpm" => AngularVelocity::from_rpm(float_val.parse::<f64>()?),
-                    "hz" => AngularVelocity::from_hertz(float_val.parse::<f64>()?),
-                    _ => AngularVelocity::from_radians_per_second(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(AngularVelocity::from_radians_per_second(
-            val.parse::<f64>()?,
-        ))
-    }
+impl_from_str! {
+    AngularVelocity,
+    AngularVelocity::from_radians_per_second,
+    (AngularVelocity::from_radians_per_second, "rad/s"),
+    (AngularVelocity::from_rpm, "rpm"),
+    (AngularVelocity::from_hertz, "hz"),
 }
 
 implement_measurement! { AngularVelocity }
@@ -107,6 +85,9 @@ implement_measurement! { AngularVelocity }
 mod test {
     use super::*;
     use crate::test_utils::assert_almost_eq;
+
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     #[test]
     fn rpm() {

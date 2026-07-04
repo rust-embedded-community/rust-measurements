@@ -1,10 +1,9 @@
 //! Types and constants for handling volumes (that is, three-dimensional space, not loudness).
 
 use super::measurement::*;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// The `Volume` struct can be used to deal with volumes in a common way.
 ///
@@ -344,53 +343,28 @@ impl Measurement for Volume {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Volume {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new Volume from a string
-    /// Plain numbers in string are considered to be Liters. Defaults for units with US
-    /// and UK variants are considered to be in US without specific "imp" prefix.
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Volume::from_liters(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z .]{1,10}[0-9³]{0,1})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "cm3" | "cm\u{00b3}" => {
-                        Volume::from_cubic_centimeters(float_val.parse::<f64>()?)
-                    }
-                    "mm3" | "mm\u{00b3}" => {
-                        Volume::from_cubic_millimeters(float_val.parse::<f64>()?)
-                    }
-                    "ft3" | "ft\u{00b3}" => Volume::from_cubic_feet(float_val.parse::<f64>()?),
-                    "yd3" | "yd\u{00b3}" => Volume::from_cubic_yards(float_val.parse::<f64>()?),
-                    "in3" | "in\u{00b3}" => Volume::from_cubic_inches(float_val.parse::<f64>()?),
-                    "gal" | "us gal" => Volume::from_gallons(float_val.parse::<f64>()?),
-                    "imp gal" => Volume::from_gallons_uk(float_val.parse::<f64>()?),
-                    "cup" => Volume::from_cups(float_val.parse::<f64>()?),
-                    "tsp" => Volume::from_teaspoons(float_val.parse::<f64>()?),
-                    "tbsp" | "t." => Volume::from_tablespoons(float_val.parse::<f64>()?),
-                    "ml" => Volume::from_milliliters(float_val.parse::<f64>()?),
-                    "us fl oz" | "fl oz" => Volume::from_fluid_ounces(float_val.parse::<f64>()?),
-                    "imp fl oz" => Volume::from_fluid_ounces_uk(float_val.parse::<f64>()?),
-                    "m3" | "m\u{00b3}" => Volume::from_cubic_meters(float_val.parse::<f64>()?),
-                    "gt" | "gtt" => Volume::from_drops(float_val.parse::<f64>()?),
-                    "dr" => Volume::from_drams(float_val.parse::<f64>()?),
-                    "l" => Volume::from_litres(float_val.parse::<f64>()?),
-                    "qt" => Volume::from_quarts(float_val.parse::<f64>()?),
-                    "us pt" | "us p" | "p" | "pt" => Volume::from_pints(float_val.parse::<f64>()?),
-                    "imp pt" | "imp p" => Volume::from_pints_uk(float_val.parse::<f64>()?),
-                    _ => Volume::from_litres(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Volume::from_liters(val.parse::<f64>()?))
-    }
+impl_from_str! {
+    Volume, Volume::from_liters,
+    (Volume::from_cubic_centimeters, "cm³", "cm3"),
+    (Volume::from_cubic_millimeters, "mm³", "mm3"),
+    (Volume::from_cubic_feet, "ft³", "ft3"),
+    (Volume::from_cubic_yards, "yd³", "yd3"),
+    (Volume::from_cubic_inches, "in³", "in3"),
+    (Volume::from_gallons, "gal", "us gal"),
+    (Volume::from_gallons_uk, "imp gal"),
+    (Volume::from_cups, "cup"),
+    (Volume::from_teaspoons, "tsp"),
+    (Volume::from_tablespoons, "tbsp", "t."),
+    (Volume::from_milliliters, "ml"),
+    (Volume::from_fluid_ounces, "us fl oz", "fl oz"),
+    (Volume::from_fluid_ounces_uk, "imp fl oz"),
+    (Volume::from_cubic_meters, "m³", "m3"),
+    (Volume::from_drops, "gt", "gtt"),
+    (Volume::from_drams, "dr"),
+    (Volume::from_liters, "l"),
+    (Volume::from_quarts, "qt"),
+    (Volume::from_pints, "us pt", "us p", "p", "pt"),
+    (Volume::from_pints_uk, "imp pt", "imp p"),
 }
 
 implement_measurement! { Volume }
@@ -398,6 +372,9 @@ implement_measurement! { Volume }
 #[cfg(test)]
 mod test {
     use crate::{test_utils::assert_almost_eq, volume::*};
+
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     // Volume Units
     // Metric
