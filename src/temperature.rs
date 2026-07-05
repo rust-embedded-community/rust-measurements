@@ -1,10 +1,9 @@
 //! Types and constants for handling temperature.
 
 use super::measurement::*;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// The `Temperature` struct can be used to deal with absolute temperatures in
 /// a common way.
@@ -205,32 +204,12 @@ impl ::core::cmp::PartialOrd for Temperature {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Temperature {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new Temperature from a string
-    /// Plain numbers in string are considered to be Celsius
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Temperature::from_celsius(0.0));
-        }
-
-        let re = Regex::new(r"\s*([0-9.]*)\s?(deg|\u{00B0}|)?\s?([fckrFCKR]{1})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(3).unwrap().as_str().to_uppercase().as_str() {
-                    "F" => Temperature::from_fahrenheit(float_val.parse::<f64>()?),
-                    "C" => Temperature::from_celsius(float_val.parse::<f64>()?),
-                    "K" => Temperature::from_kelvin(float_val.parse::<f64>()?),
-                    "R" => Temperature::from_rankine(float_val.parse::<f64>()?),
-                    _ => Temperature::from_celsius(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Temperature::from_celsius(val.parse::<f64>()?))
-    }
+impl_from_str! {
+    Temperature, Temperature::from_celsius,
+    (Temperature::from_celsius, "C", "\u{00B0}C", "deg C", "degC"),
+    (Temperature::from_kelvin, "K"),
+    (Temperature::from_fahrenheit, "F", "\u{00B0}F", "deg F", "degF"),
+    (Temperature::from_rankine, "R", "\u{00B0}R", "deg R", "degR"),
 }
 
 implement_display!(Temperature);
@@ -239,6 +218,9 @@ implement_measurement!(TemperatureDelta);
 #[cfg(test)]
 mod test {
     use crate::{temperature::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     // Temperature Units
     #[test]

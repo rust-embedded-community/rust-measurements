@@ -1,12 +1,13 @@
 [package]
 name = "measurements"
 version = "0.11.1"
-authors = ["James O'Cull <jocull@delmarsd.com>",
-          "Jonathan Pallant <github@thejpster.org.uk>",
-          "Hannah McLaughlin <h@mcla.ug>",
-          "Danilo Bargen <mail@dbrgn.ch>",
-          "Tim Alberdingk Thijm <tthijm@cs.princeton.edu>",
-          ]
+authors = [
+  "James O'Cull <jocull@delmarsd.com>",
+  "Jonathan Pallant <github@thejpster.org.uk>",
+  "Hannah McLaughlin <h@mcla.ug>",
+  "Danilo Bargen <mail@dbrgn.ch>",
+  "Tim Alberdingk Thijm <tthijm@cs.princeton.edu>",
+]
 documentation = "https://docs.rs/measurements"
 repository = "https://github.com/rust-embedded-community/rust-measurements"
 keywords = ["measurements", "lengths", "weights", "temperatures", "volumes"]
@@ -17,9 +18,10 @@ edition = "2018"
 
 [features]
 std = []
-from_str = ["regex", "std"]
+from_str = ["std"]
 
 [dependencies]
-serde = { version = "1.0", optional = true, default-features = false, features = ["derive"] }
-regex = { version = "1", optional = true }
+serde = { version = "1.0", optional = true, default-features = false, features = [
+  "derive",
+] }
 libm = { version = "0.2" }

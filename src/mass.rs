@@ -1,10 +1,9 @@
 //! Types and constants for handling masses.
 
 use super::measurement::*;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 // Constants, metric
 
@@ -255,39 +254,19 @@ impl Measurement for Mass {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Mass {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new Mass from a string
-    /// Plain numbers in string are considered to be Kilograms
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Mass::from_kilograms(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-zμ]{1,3})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().to_lowercase().as_str() {
-                    "ug" | "μg" => Mass::from_micrograms(float_val.parse::<f64>()?),
-                    "mg" => Mass::from_milligrams(float_val.parse::<f64>()?),
-                    "ct" => Mass::from_carats(float_val.parse::<f64>()?),
-                    "g" => Mass::from_grams(float_val.parse::<f64>()?),
-                    "kg" => Mass::from_kilograms(float_val.parse::<f64>()?),
-                    "t" => Mass::from_metric_tons(float_val.parse::<f64>()?),
-                    "gr" => Mass::from_grains(float_val.parse::<f64>()?),
-                    "dwt" => Mass::from_pennyweights(float_val.parse::<f64>()?),
-                    "oz" => Mass::from_ounces(float_val.parse::<f64>()?),
-                    "st" => Mass::from_stones(float_val.parse::<f64>()?),
-                    "lb" | "lbs" => Mass::from_pounds(float_val.parse::<f64>()?),
-                    _ => Mass::from_grams(float_val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Mass::from_kilograms(val.parse::<f64>()?))
-    }
+impl_from_str! {
+    Mass, Mass::from_kilograms,
+    (Mass::from_micrograms, "ug", "\u{00B5}g", "\u{03BC}g"),
+    (Mass::from_milligrams, "mg"),
+    (Mass::from_carats, "ct"),
+    (Mass::from_grams, "g"),
+    (Mass::from_kilograms, "kg"),
+    (Mass::from_metric_tons, "t"),
+    (Mass::from_grains, "gr"),
+    (Mass::from_pennyweights, "dwt"),
+    (Mass::from_ounces, "oz"),
+    (Mass::from_stones, "st"),
+    (Mass::from_pounds, "lb", "lbs")
 }
 
 implement_measurement! { Mass }
@@ -295,6 +274,9 @@ implement_measurement! { Mass }
 #[cfg(test)]
 mod test {
     use crate::{mass::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     // Mass Units
     // Metric

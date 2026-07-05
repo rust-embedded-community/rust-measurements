@@ -1,12 +1,12 @@
 on:
   push:
-    branches: [ staging, trying, master ]
+    branches: [staging, trying, master]
   pull_request:
 
 name: Build
 
 env:
-  RUSTFLAGS: '--deny warnings'
+  RUSTFLAGS: "--deny warnings"
   MSRV: 1.76
 
 jobs:
@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        FEATURES: ['', 'from_str', 'std', 'serde', 'regex']
-        TARGET: ['x86_64-unknown-linux-gnu']
+        FEATURES: ["", "from_str", "std", "serde"]
+        TARGET: ["x86_64-unknown-linux-gnu"]
 
         include:
           # Test nightly but don't fail
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        FEATURES: ['', 'from_str', 'std', 'serde', 'regex']
+        FEATURES: ["", "from_str", "std", "serde"]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable

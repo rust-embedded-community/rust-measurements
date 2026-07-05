@@ -2,10 +2,9 @@
 
 use super::length;
 use super::measurement::*;
+
 #[cfg(feature = "from_str")]
-use regex::Regex;
-#[cfg(feature = "from_str")]
-use std::str::FromStr;
+use crate::impl_from_str;
 
 /// Number of acres in a square meter
 const SQUARE_METER_ACRE_FACTOR: f64 = 1.0 / 4046.86;
@@ -306,53 +305,20 @@ impl Measurement for Area {
 }
 
 #[cfg(feature = "from_str")]
-impl FromStr for Area {
-    type Err = std::num::ParseFloatError;
-
-    /// Create a new Area from a string
-    /// Plain numbers in string are considered to be square meters
-    fn from_str(val: &str) -> Result<Self, Self::Err> {
-        if val.is_empty() {
-            return Ok(Area::from_square_meters(0.0));
-        }
-
-        let re = Regex::new(r"(?i)\s*([0-9.]*)\s?([a-z2\u{00B2}\u{00B5} ]{1,5})\s*$").unwrap();
-        if let Some(caps) = re.captures(val) {
-            println!("{caps:?}");
-            let float_val = caps.get(1).unwrap().as_str();
-            return Ok(
-                match caps.get(2).unwrap().as_str().trim().to_lowercase().as_str() {
-                    "nm\u{00B2}" | "nm2" => Area::from_square_nanometers(float_val.parse::<f64>()?),
-                    "\u{00B5}m\u{00B2}" | "\u{00B5}m2" | "um\u{00B2}" | "um2" => {
-                        Area::from_square_micrometers(float_val.parse::<f64>()?)
-                    }
-                    "mm\u{00B2}" | "mm2" => {
-                        Area::from_square_millimeters(float_val.parse::<f64>()?)
-                    }
-                    "cm\u{00B2}" | "cm2" => {
-                        Area::from_square_centimeters(float_val.parse::<f64>()?)
-                    }
-                    "dm\u{00B2}" | "dm2" => Area::from_square_decimeters(float_val.parse::<f64>()?),
-                    "m\u{00B2}" | "m2" => Area::from_square_meters(float_val.parse::<f64>()?),
-                    "km\u{00B2}" | "km2" => Area::from_square_kilometers(float_val.parse::<f64>()?),
-                    "ha" | "hm\u{00B2}" | "hm2" => Area::from_hectares(float_val.parse::<f64>()?),
-                    "acre" | "ac" => Area::from_acres(float_val.parse::<f64>()?),
-                    "ft\u{00B2}" | "ft2" | "sq ft" => {
-                        Area::from_square_feet(float_val.parse::<f64>()?)
-                    }
-                    "yd\u{00B2}" | "yd2" | "sq yd" => {
-                        Area::from_square_yards(float_val.parse::<f64>()?)
-                    }
-                    "mi\u{00B2}" | "mi2" | "sq mi" => {
-                        Area::from_square_miles(float_val.parse::<f64>()?)
-                    }
-                    _ => Area::from_square_meters(val.parse::<f64>()?),
-                },
-            );
-        }
-
-        Ok(Area::from_square_meters(val.parse::<f64>()?))
-    }
+impl_from_str! {
+    Area, Area::from_square_meters,
+    (Area::from_square_nanometers, "nm²", "nm2"),
+    (Area::from_square_micrometers, "\u{00b5}m²", "\u{03bc}m2", "um²", "um2"),
+    (Area::from_square_millimeters, "mm²", "mm2"),
+    (Area::from_square_centimeters, "cm²", "cm2"),
+    (Area::from_square_decimeters, "dm²", "dm2"),
+    (Area::from_square_meters, "m²", "m2"),
+    (Area::from_square_kilometers, "km²", "km2"),
+    (Area::from_hectares, "ha", "hm²", "hm2"),
+    (Area::from_acres, "acre", "ac"),
+    (Area::from_square_feet, "ft²", "ft2", "sq ft"),
+    (Area::from_square_yards, "yd²", "yd2", "sq yd"),
+    (Area::from_square_miles, "mi²", "mi2", "sq mi"),
 }
 
 implement_measurement! { Area }
@@ -360,6 +326,9 @@ implement_measurement! { Area }
 #[cfg(test)]
 mod test {
     use crate::{area::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use std::str::FromStr;
 
     #[test]
     fn square_meters() {
