@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// The `Voltage` struct can be used to deal with electric potential difference
 /// in a common way.
 ///
@@ -98,9 +101,22 @@ impl Measurement for Voltage {
 
 implement_measurement! { Voltage }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Voltage,
+    Voltage::from_volts,
+    (Voltage::from_volts, "V"),
+    (Voltage::from_microvolts, "uV", "\u{00B5}V", "\u{03BC}V"),
+    (Voltage::from_millivolts, "mV"),
+    (Voltage::from_kilovolts, "kV"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{current::*, resistance::*, test_utils::assert_almost_eq, voltage::*};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn as_kilovolts() {
@@ -209,5 +225,47 @@ mod test {
         let u = Voltage::from_kilovolts(4.7);
         let r = u / i;
         assert_eq!(r.as_ohms(), 470.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn volts_from_str() {
+        assert_almost_eq(123.4, Voltage::from_str("123.4 V").unwrap().as_volts());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn microvolts_from_str() {
+        assert_almost_eq(
+            123.4,
+            Voltage::from_str("123.4 uV").unwrap().as_microvolts(),
+        );
+        assert_almost_eq(
+            123.4,
+            Voltage::from_str("123.4 \u{00B5}V")
+                .unwrap()
+                .as_microvolts(),
+        );
+        assert_almost_eq(
+            123.4,
+            Voltage::from_str("123.4 \u{03BC}V")
+                .unwrap()
+                .as_microvolts(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millivolts_from_str() {
+        assert_almost_eq(
+            123.4,
+            Voltage::from_str("123.4 mV").unwrap().as_millivolts(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilovolts_from_str() {
+        assert_almost_eq(123.4, Voltage::from_str("123.4 kV").unwrap().as_kilovolts());
     }
 }

@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// The `Resistance` struct can be used to deal with electrical resistance in a
 /// common way.
 ///
@@ -88,9 +91,21 @@ impl Measurement for Resistance {
 
 implement_measurement! { Resistance }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Resistance,
+    Resistance::from_ohms,
+    (Resistance::from_ohms, "\u{2126}", "\u{03A9}"),
+    (Resistance::from_kiloohms, "k\u{2126}", "k\u{03A9}"),
+    (Resistance::from_megaohms, "M\u{2126}", "M\u{03A9}"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{resistance::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn as_ohms() {
@@ -166,5 +181,52 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn ohms_from_str() {
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 \u{2126}").unwrap().as_ohms(),
+        );
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 \u{03A9}").unwrap().as_ohms(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kiloohms_from_str() {
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 k\u{2126}")
+                .unwrap()
+                .as_kiloohms(),
+        );
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 k\u{03A9}")
+                .unwrap()
+                .as_kiloohms(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn megaohms_from_str() {
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 M\u{2126}")
+                .unwrap()
+                .as_megaohms(),
+        );
+        assert_almost_eq(
+            123.4,
+            Resistance::from_str("123.4 M\u{03A9}")
+                .unwrap()
+                .as_megaohms(),
+        );
     }
 }

@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 // Constants, metric
 
 /// Number of nanometers in a meter
@@ -297,9 +300,31 @@ impl Measurement for Length {
 
 implement_measurement! { Length }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Length,
+    Length::from_meters,
+    (Length::from_meters, "m"),
+    (Length::from_nanometers, "nm"),
+    (Length::from_micrometers, "um", "\u{00B5}m", "\u{03BC}m"),
+    (Length::from_millimeters, "mm"),
+    (Length::from_centimeters, "cm"),
+    (Length::from_decimeters, "dm"),
+    (Length::from_hectometers, "hm"),
+    (Length::from_kilometers, "km"),
+    (Length::from_inches, "in", "\""),
+    (Length::from_feet, "ft"),
+    (Length::from_yards, "yd"),
+    (Length::from_furlongs, "fur"),
+    (Length::from_miles, "mi", "mi."),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{length::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     // Metric
     #[test]
@@ -507,5 +532,109 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn meters_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 m").unwrap().as_meters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn nanometers_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 nm").unwrap().as_nanometers());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn micrometers_from_str() {
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 um").unwrap().as_micrometers(),
+        );
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 \u{03BC}m")
+                .unwrap()
+                .as_micrometers(),
+        );
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 \u{03BC}m")
+                .unwrap()
+                .as_micrometers(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millimeters_from_str() {
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 mm").unwrap().as_millimeters(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn centimeters_from_str() {
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 cm").unwrap().as_centimeters(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn decimeters_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 dm").unwrap().as_decimeters());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn hectometers_from_str() {
+        assert_almost_eq(
+            123.4,
+            Length::from_str("123.4 hm").unwrap().as_hectometers(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilometers_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 km").unwrap().as_kilometers());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn inches_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 in").unwrap().as_inches());
+        assert_almost_eq(123.4, Length::from_str("123.4 \"").unwrap().as_inches());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn feet_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 ft").unwrap().as_feet());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn yards_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 yd").unwrap().as_yards());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn furlongs_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 fur").unwrap().as_furlongs());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn miles_from_str() {
+        assert_almost_eq(123.4, Length::from_str("123.4 mi").unwrap().as_miles());
+        assert_almost_eq(123.4, Length::from_str("123.4 mi.").unwrap().as_miles());
     }
 }

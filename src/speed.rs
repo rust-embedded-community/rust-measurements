@@ -3,6 +3,9 @@
 use super::measurement::*;
 use super::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of seconds in a minute
 pub const SECONDS_MINUTES_FACTOR: f64 = 60.0;
 /// Number of minutes in a hour
@@ -112,9 +115,21 @@ impl Measurement for Speed {
 
 implement_measurement! { Speed }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Speed,
+    Speed::from_meters_per_second,
+    (Speed::from_meters_per_second, "m/s", "m s-1"),
+    (Speed::from_kilometers_per_hour, "km/h", "km h-1"),
+    (Speed::from_miles_per_hour, "mph"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{length::Length, speed::*, test_utils::assert_almost_eq, time::Duration};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     // Metric
     #[test]
@@ -232,5 +247,46 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn meters_per_second_from_str() {
+        assert_almost_eq(
+            123.4,
+            Speed::from_str("123.4 m/s").unwrap().as_meters_per_second(),
+        );
+        assert_almost_eq(
+            123.4,
+            Speed::from_str("123.4 m s-1")
+                .unwrap()
+                .as_meters_per_second(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilometers_per_hour_from_str() {
+        assert_almost_eq(
+            123.4,
+            Speed::from_str("123.4 km/h")
+                .unwrap()
+                .as_kilometers_per_hour(),
+        );
+        assert_almost_eq(
+            123.4,
+            Speed::from_str("123.4 km h-1")
+                .unwrap()
+                .as_kilometers_per_hour(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn miles_per_hour_from_str() {
+        assert_almost_eq(
+            123.4,
+            Speed::from_str("123.4 mph").unwrap().as_miles_per_hour(),
+        );
     }
 }

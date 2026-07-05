@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of horsepower in a watt
 pub const WATT_HORSEPOWER_FACTOR: f64 = 1.0 / 745.6998715822702;
 /// Number of BTU/min in a watt
@@ -150,9 +153,25 @@ impl Measurement for Power {
 
 implement_measurement! { Power }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Power,
+    Power::from_watts,
+    (Power::from_watts, "W"),
+    (Power::from_microwatts, "uW", "\u{00B5}W", "\u{03BC}W"),
+    (Power::from_milliwatts, "mW"),
+    (Power::from_horsepower, "hp"),
+    (Power::from_ps, "PS", "KM", "cv", "hk", "pk", "k", "ks", "ch"),
+    (Power::from_btu_per_minute, "Btu/min", "BTU/min", "Btu min-1", "BTU min-1"),
+    (Power::from_kilowatts, "kW"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{current::*, power::*, test_utils::assert_almost_eq, voltage::*};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn as_btu_per_minute() {
@@ -298,5 +317,85 @@ mod test {
         let p = Power::from_kilowatts(2.3);
         let u = p / i;
         assert_eq!(u.as_volts(), 230.0);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn watts_from_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 W").unwrap().as_watts());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn microwatts_from_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 uW").unwrap().as_microwatts());
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 \u{00B5}W").unwrap().as_microwatts(),
+        );
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 \u{03BC}W").unwrap().as_microwatts(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn milliwatts_from_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 mW").unwrap().as_milliwatts());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilowatts_from_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 kW").unwrap().as_kilowatts());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn horsepowerfrom_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 hp").unwrap().as_horsepower());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn ps_from_str() {
+        assert_almost_eq(123.4, Power::from_str("123.4 PS").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 KM").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 cv").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 hk").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 pk").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 k").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 ks").unwrap().as_ps());
+        assert_almost_eq(123.4, Power::from_str("123.4 ch").unwrap().as_ps());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn btu_per_minute_from_str() {
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 Btu/min")
+                .unwrap()
+                .as_btu_per_minute(),
+        );
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 BTU/min")
+                .unwrap()
+                .as_btu_per_minute(),
+        );
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 Btu min-1")
+                .unwrap()
+                .as_btu_per_minute(),
+        );
+        assert_almost_eq(
+            123.4,
+            Power::from_str("123.4 BTU min-1")
+                .unwrap()
+                .as_btu_per_minute(),
+        );
     }
 }

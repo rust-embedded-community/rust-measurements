@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// The `Energy` struct can be used to deal with energies in a common way.
 /// Common metric and imperial units are supported.
 ///
@@ -116,9 +119,24 @@ impl Measurement for Energy {
 
 implement_measurement! { Energy }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Energy,
+    Energy::from_joules,
+    (Energy::from_joules, "J"),
+    (Energy::from_kcalories, "kcal"),
+    (Energy::from_btu, "BTU", "Btu"),
+    (Energy::from_e_v, "eV"),
+    (Energy::from_watt_hours, "Wh"),
+    (Energy::from_kilowatt_hours, "kWh"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{energy::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn as_kcalories() {
@@ -240,5 +258,48 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn joules_from_str() {
+        assert_almost_eq(123.4, Energy::from_str("123.4 J").unwrap().as_joules());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kcal_from_str() {
+        assert_almost_eq(
+            123.4,
+            Energy::from_str("123.4 kcal").unwrap().as_kcalories(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn btu_from_str() {
+        assert_almost_eq(123.4, Energy::from_str("123.4 BTU").unwrap().as_btu());
+        assert_almost_eq(123.4, Energy::from_str("123.4 Btu").unwrap().as_btu());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn e_v_from_str() {
+        assert_almost_eq(123.4, Energy::from_str("123.4 eV").unwrap().as_e_v());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn watthours_from_str() {
+        assert_almost_eq(123.4, Energy::from_str("123.4 Wh").unwrap().as_watt_hours());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilowatthours_from_str() {
+        assert_almost_eq(
+            123.4,
+            Energy::from_str("123.4 kWh").unwrap().as_kilowatt_hours(),
+        );
     }
 }

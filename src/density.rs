@@ -3,6 +3,9 @@
 use super::measurement::*;
 use crate::{mass::Mass, volume::Volume};
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 // Constants, metric
 /// Number of pound per cubic foot in 1 kilograms per cubic meter
 pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;
@@ -117,11 +120,22 @@ impl Measurement for Density {
 
 implement_measurement! { Density }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Density,
+    Density::from_kilograms_per_cubic_meter,
+    (Density::from_kilograms_per_cubic_meter, "kg/m3", "kg/m³", "kg m-3"),
+    (Density::from_pounds_per_cubic_feet, "lb/ft3", "lbs/ft3", "lb/ft³", "lbs/ft³", "lb ft-3", "lbs ft-3"),
+}
+
 #[cfg(test)]
 mod test {
 
     use super::*;
     use crate::test_utils::assert_almost_eq;
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     // Metric
     #[test]
@@ -227,5 +241,76 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilograms_per_cubic_meter_from_str() {
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 kg/m3")
+                .unwrap()
+                .as_kilograms_per_cubic_meter(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 kg/m³")
+                .unwrap()
+                .as_kilograms_per_cubic_meter(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 kg m-3")
+                .unwrap()
+                .as_kilograms_per_cubic_meter(),
+        );
+
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4")
+                .unwrap()
+                .as_kilograms_per_cubic_meter(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pounds_per_cubic_foot_from_str() {
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lb/ft3")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lbs/ft3")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lb/ft³")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lbs/ft³")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lb ft-3")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
+        assert_almost_eq(
+            123.4,
+            Density::from_str("123.4 lbs ft-3")
+                .unwrap()
+                .as_pounds_per_cubic_feet(),
+        );
     }
 }
