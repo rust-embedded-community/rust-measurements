@@ -516,10 +516,10 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn micrograms_from_string() {
-        // assert_almost_eq(123.0, Mass::from_str(" 123ug ").unwrap().as_micrograms());
-        // assert_almost_eq(123.0, Mass::from_str("123 ug ").unwrap().as_micrograms());
-        // assert_almost_eq(123.0, Mass::from_str("  123μg").unwrap().as_micrograms());
-        // assert_almost_eq(123.0, Mass::from_str("123 μg").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str(" 123ug ").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("123 ug ").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("  123μg").unwrap().as_micrograms());
+        assert_almost_eq(123.0, Mass::from_str("123 μg").unwrap().as_micrograms());
     }
 
     #[test]
