@@ -76,7 +76,7 @@ impl_from_str! {
     AngularVelocity::from_radians_per_second,
     (AngularVelocity::from_radians_per_second, "rad/s"),
     (AngularVelocity::from_rpm, "rpm"),
-    (AngularVelocity::from_hertz, "hz"),
+    (AngularVelocity::from_hertz, "Hz"),
 }
 
 implement_measurement! { AngularVelocity }

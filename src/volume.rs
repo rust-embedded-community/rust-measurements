@@ -350,20 +350,20 @@ impl_from_str! {
     (Volume::from_cubic_feet, "ft³", "ft3"),
     (Volume::from_cubic_yards, "yd³", "yd3"),
     (Volume::from_cubic_inches, "in³", "in3"),
-    (Volume::from_gallons, "gal", "us gal"),
+    (Volume::from_gallons, "gal", "US gal"),
     (Volume::from_gallons_uk, "imp gal"),
     (Volume::from_cups, "cup"),
     (Volume::from_teaspoons, "tsp"),
-    (Volume::from_tablespoons, "tbsp", "t."),
-    (Volume::from_milliliters, "ml"),
-    (Volume::from_fluid_ounces, "us fl oz", "fl oz"),
+    (Volume::from_tablespoons, "tbsp", "tbsp.", "Tbsp", "Tbsp.", "Tb.", "T."),
+    (Volume::from_milliliters, "ml", "mL"),
+    (Volume::from_fluid_ounces, "US fl oz", "fl oz"),
     (Volume::from_fluid_ounces_uk, "imp fl oz"),
     (Volume::from_cubic_meters, "m³", "m3"),
     (Volume::from_drops, "gt", "gtt"),
     (Volume::from_drams, "dr"),
-    (Volume::from_liters, "l"),
+    (Volume::from_liters, "l", "L"),
     (Volume::from_quarts, "qt"),
-    (Volume::from_pints, "us pt", "us p", "p", "pt"),
+    (Volume::from_pints, "US pt", "US p", "p", "pt"),
     (Volume::from_pints_uk, "imp pt", "imp p"),
 }
 
@@ -756,9 +756,25 @@ mod test {
         assert!(v.is_ok());
         assert_almost_eq(10.0, v.unwrap().as_tablespoons());
 
-        let v2 = Volume::from_str("10T.");
+        let v2 = Volume::from_str("10 tbsp.");
         assert!(v2.is_ok());
         assert_almost_eq(10.0, v2.unwrap().as_tablespoons());
+
+        let v3 = Volume::from_str("10 Tbsp");
+        assert!(v3.is_ok());
+        assert_almost_eq(10.0, v3.unwrap().as_tablespoons());
+
+        let v4 = Volume::from_str("10 Tbsp.");
+        assert!(v4.is_ok());
+        assert_almost_eq(10.0, v4.unwrap().as_tablespoons());
+
+        let v5 = Volume::from_str("10 Tb.");
+        assert!(v5.is_ok());
+        assert_almost_eq(10.0, v5.unwrap().as_tablespoons());
+
+        let v6 = Volume::from_str("10T.");
+        assert!(v6.is_ok());
+        assert_almost_eq(10.0, v6.unwrap().as_tablespoons());
     }
 
     #[test]
@@ -767,6 +783,10 @@ mod test {
         let v = Volume::from_str("10ml");
         assert!(v.is_ok());
         assert_almost_eq(10.0, v.unwrap().as_milliliters());
+
+        let v2 = Volume::from_str("10mL");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_milliliters());
     }
 
     #[test]
@@ -827,6 +847,10 @@ mod test {
         let v = Volume::from_str("10L");
         assert!(v.is_ok());
         assert_almost_eq(10.0, v.unwrap().as_liters());
+
+        let v2 = Volume::from_str("10l");
+        assert!(v2.is_ok());
+        assert_almost_eq(10.0, v2.unwrap().as_liters());
     }
 
     #[test]
