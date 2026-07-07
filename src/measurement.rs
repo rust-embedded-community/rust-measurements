@@ -174,8 +174,8 @@ macro_rules! implement_measurement {
 #[cfg(feature = "from_str")]
 macro_rules! impl_from_str {
     ($t:ty, $d:path, $(($f:path, $($s:expr),+)),+ $(,)?) => {
-        impl ::std::str::FromStr for $t {
-            type Err = ::std::num::ParseFloatError;
+        impl ::core::str::FromStr for $t {
+            type Err = ::core::num::ParseFloatError;
 
             fn from_str(val: &str) -> Result<Self, Self::Err> {
                 // No value provided: return 0.0 in base unit.
