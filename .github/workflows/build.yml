@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        FEATURES: ["", "from_str"]
         TARGET: [thumbv6m-none-eabi, thumbv7m-none-eabi]
 
         include:
