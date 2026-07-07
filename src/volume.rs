@@ -374,7 +374,7 @@ mod test {
     use crate::{test_utils::assert_almost_eq, volume::*};
 
     #[cfg(feature = "from_str")]
-    use std::str::FromStr;
+    use core::str::FromStr;
 
     // Volume Units
     // Metric

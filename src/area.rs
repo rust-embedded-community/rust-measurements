@@ -328,7 +328,7 @@ mod test {
     use crate::{area::*, test_utils::assert_almost_eq};
 
     #[cfg(feature = "from_str")]
-    use std::str::FromStr;
+    use core::str::FromStr;
 
     #[test]
     fn square_meters() {

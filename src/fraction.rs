@@ -232,7 +232,7 @@ impl_from_str! {
 mod test {
     use crate::{fraction::*, test_utils::assert_almost_eq};
     #[cfg(feature = "from_str")]
-    use std::str::FromStr;
+    use core::str::FromStr;
 
     #[test]
     fn as_decimal() {

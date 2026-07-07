@@ -116,7 +116,7 @@ mod test {
     use crate::{angle::*, test_utils::assert_almost_eq, PI};
 
     #[cfg(feature = "from_str")]
-    use std::str::FromStr;
+    use core::str::FromStr;
 
     #[test]
     fn radians() {

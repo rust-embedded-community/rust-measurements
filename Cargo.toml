@@ -18,7 +18,7 @@ edition = "2018"
 
 [features]
 std = []
-from_str = ["std"]
+from_str = []
 
 [dependencies]
 serde = { version = "1.0", optional = true, default-features = false, features = [
