@@ -308,7 +308,7 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn fahrenheit_lc_str() {
-        let t = Temperature::from_str("100 f");
+        let t = Temperature::from_str("100 F");
         assert!(t.is_ok());
 
         let o = t.unwrap().as_fahrenheit();
@@ -318,7 +318,7 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn fahrenheit_degree_str() {
-        let t = Temperature::from_str("100 deg f");
+        let t = Temperature::from_str("100 deg F");
         assert!(t.is_ok());
 
         let o = t.unwrap().as_fahrenheit();

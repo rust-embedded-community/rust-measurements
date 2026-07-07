@@ -553,8 +553,8 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn tonnes_from_string() {
-        assert_almost_eq(123.0, Mass::from_str("123T").unwrap().as_tonnes());
-        assert_almost_eq(123.0, Mass::from_str("123 T").unwrap().as_tonnes());
+        assert_almost_eq(123.0, Mass::from_str("123t").unwrap().as_tonnes());
+        assert_almost_eq(123.0, Mass::from_str("123 t").unwrap().as_tonnes());
     }
 
     #[test]
