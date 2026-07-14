@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of Pascals in an atmosphere
 pub const PASCAL_ATMOSPHERE_FACTOR: f64 = 101_325.0;
 /// Number of Pascals in a hectopascal
@@ -170,10 +173,28 @@ impl Measurement for Pressure {
 
 implement_measurement! { Pressure }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Pressure,
+    Pressure::from_pascals,
+    (Pressure::from_pascals, "Pa"),
+    (Pressure::from_hectopascals, "hPa"),
+    (Pressure::from_kilopascals, "kPa"),
+    (Pressure::from_psi, "psi", "lbf/in²", "lbf/in2", "lbf in-2"),
+    (Pressure::from_bars, "bar"),
+    (Pressure::from_atmospheres, "atm"),
+    (Pressure::from_torrs, "Torr"),
+    (Pressure::from_millitorrs, "mTorr"),
+    (Pressure::from_millimeter_mercury, "mmHg"),
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::test_utils::assert_almost_eq;
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     fn hectopascals() {
@@ -330,5 +351,82 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pascals_from_str() {
+        assert_almost_eq(123.4, Pressure::from_str("123.4 Pa").unwrap().as_pascals());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn hectopascals_from_str() {
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 hPa").unwrap().as_hectopascals(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilopascals_from_str() {
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 kPa").unwrap().as_kilopascals(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn psi_from_str() {
+        assert_almost_eq(123.4, Pressure::from_str("123.4 psi").unwrap().as_psi());
+        assert_almost_eq(123.4, Pressure::from_str("123.4 lbf/in²").unwrap().as_psi());
+        assert_almost_eq(123.4, Pressure::from_str("123.4 lbf/in2").unwrap().as_psi());
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 lbf in-2").unwrap().as_psi(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn bars_from_str() {
+        assert_almost_eq(123.4, Pressure::from_str("123.4 bar").unwrap().as_bars());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn atmospheres_from_str() {
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 atm").unwrap().as_atmospheres(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn torrs_from_str() {
+        assert_almost_eq(123.4, Pressure::from_str("123.4 Torr").unwrap().as_torrs());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millitorrs_from_str() {
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 mTorr").unwrap().as_millitorrs(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millimeter_mercury_from_str() {
+        assert_almost_eq(
+            123.4,
+            Pressure::from_str("123.4 mmHg")
+                .unwrap()
+                .as_millimeter_mercury(),
+        );
     }
 }

@@ -3,6 +3,9 @@
 use super::measurement::*;
 use crate::time;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of nanohertz in a Hz
 pub const HERTZ_NANOHERTZ_FACTOR: f64 = 1e9;
 /// Number of µHz in a Hz
@@ -161,10 +164,26 @@ impl Measurement for Frequency {
 
 implement_measurement! { Frequency }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Frequency,
+    Frequency::from_hertz,
+    (Frequency::from_hertz, "Hz"),
+    (Frequency::from_nanohertz, "nHz"),
+    (Frequency::from_microhertz, "uHz", "\u{00B5}Hz", "\u{03BC}Hz"),
+    (Frequency::from_millihertz, "mHz"),
+    (Frequency::from_kilohertz, "kHz"),
+    (Frequency::from_megahertz, "MHz"),
+    (Frequency::from_terahertz, "THz"),
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::{test_utils::assert_almost_eq, time};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn hertz() {
@@ -313,5 +332,77 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn hertz_from_str() {
+        assert_almost_eq(123.4, Frequency::from_str("123.4 Hz").unwrap().as_hertz());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn nanohertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 nHz").unwrap().as_nanohertz(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn microhertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 uHz").unwrap().as_microhertz(),
+        );
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 \u{00B5}Hz")
+                .unwrap()
+                .as_microhertz(),
+        );
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 \u{03BC}Hz")
+                .unwrap()
+                .as_microhertz(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millihertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 mHz").unwrap().as_millihertz(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilohertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 kHz").unwrap().as_kilohertz(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn megahertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 MHz").unwrap().as_megahertz(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn terahertz_from_str() {
+        assert_almost_eq(
+            123.4,
+            Frequency::from_str("123.4 THz").unwrap().as_terahertz(),
+        );
     }
 }

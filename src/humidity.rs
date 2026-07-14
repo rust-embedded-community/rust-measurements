@@ -3,6 +3,9 @@
 use super::measurement::*;
 use crate::{density::Density, pressure::Pressure, temperature::Temperature};
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// The `Humidity` struct can be used to deal with relative humidity
 /// in air in a common way. Relative humidity is an important metric used
 /// in weather forecasts.
@@ -176,9 +179,19 @@ impl ::core::cmp::PartialOrd for Humidity {
 
 implement_display!(Humidity);
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Humidity,
+    Humidity::from_ratio,
+    (Humidity::from_percent, "%")
+}
+
 #[cfg(test)]
 mod test {
     use crate::{humidity::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     // Humidity Units
     #[test]
@@ -272,5 +285,17 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn humidity_ratio_from_str() {
+        assert_almost_eq(0.123, Humidity::from_str("0.123").unwrap().as_ratio());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn humidity_percent_from_str() {
+        assert_almost_eq(0.123, Humidity::from_str("0.123 %").unwrap().as_percent());
     }
 }

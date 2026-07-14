@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 // Constants
 const OCTET_BIT_FACTOR: f64 = 0.125;
 
@@ -168,9 +171,28 @@ impl Measurement for Data {
 
 implement_measurement! { Data }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Data,
+    Data::from_octets,
+    (Data::from_bits, "bit"),
+    (Data::from_octets, "o"),
+    (Data::from_kilooctets, "ko"),
+    (Data::from_megaoctets, "Mo"),
+    (Data::from_gigaoctets, "Go"),
+    (Data::from_teraoctets, "To"),
+    (Data::from_kibioctets, "kio", "Ko"),
+    (Data::from_mebioctets, "Mio"),
+    (Data::from_gibioctets, "Gio"),
+    (Data::from_tebioctets, "Tio"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{data::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     // Metric
     #[test]
@@ -335,5 +357,89 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn bits_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 bit").unwrap().as_bits());
+        assert_almost_eq(123.0, Data::from_str("123bit").unwrap().as_bits());
+        assert_almost_eq(123.0, Data::from_str(" 123 bit   ").unwrap().as_bits());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn octets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 o").unwrap().as_octets());
+        assert_almost_eq(123.0, Data::from_str("123o").unwrap().as_octets());
+        assert_almost_eq(123.0, Data::from_str(" 123 o  ").unwrap().as_octets());
+
+        assert_almost_eq(123.0, Data::from_str(" 123  ").unwrap().as_octets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kilooctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 ko").unwrap().as_kilooctets());
+        assert_almost_eq(123.0, Data::from_str("123ko").unwrap().as_kilooctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 ko  ").unwrap().as_kilooctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn megaoctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 Mo").unwrap().as_megaoctets());
+        assert_almost_eq(123.0, Data::from_str("123Mo").unwrap().as_megaoctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 Mo  ").unwrap().as_megaoctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn gigaoctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 Go").unwrap().as_gigaoctets());
+        assert_almost_eq(123.0, Data::from_str("123Go").unwrap().as_gigaoctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 Go  ").unwrap().as_gigaoctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn teraoctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 To").unwrap().as_teraoctets());
+        assert_almost_eq(123.0, Data::from_str("123To").unwrap().as_teraoctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 To  ").unwrap().as_teraoctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kibioctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 kio").unwrap().as_kibioctets());
+        assert_almost_eq(123.0, Data::from_str("123kio").unwrap().as_kibioctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 kio  ").unwrap().as_kibioctets());
+
+        assert_almost_eq(123.0, Data::from_str("123 Ko").unwrap().as_kibioctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn mebioctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 Mio").unwrap().as_mebioctets());
+        assert_almost_eq(123.0, Data::from_str("123Mio").unwrap().as_mebioctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 Mio  ").unwrap().as_mebioctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn gibioctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 Gio").unwrap().as_gibioctets());
+        assert_almost_eq(123.0, Data::from_str("123Gio").unwrap().as_gibioctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 Gio  ").unwrap().as_gibioctets());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn tebioctets_from_str() {
+        assert_almost_eq(123.0, Data::from_str("123 Tio").unwrap().as_tebioctets());
+        assert_almost_eq(123.0, Data::from_str("123Tio").unwrap().as_tebioctets());
+        assert_almost_eq(123.0, Data::from_str(" 123 Tio  ").unwrap().as_tebioctets());
     }
 }

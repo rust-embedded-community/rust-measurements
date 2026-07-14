@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of pound-foot in a newton-metre
 const NEWTON_METRE_POUND_FOOT_FACTOR: f64 = 0.73756326522588;
 
@@ -69,10 +72,21 @@ impl Measurement for Torque {
 
 implement_measurement! { Torque }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Torque,
+    Torque::from_newton_meters,
+    (Torque::from_newton_meters, "Nm"),
+    (Torque::from_pound_foot, "lbf ft", "lbf-ft", "lb ft", "lb-ft")
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::test_utils::assert_almost_eq;
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     fn lbf_ft() {
@@ -82,5 +96,35 @@ mod test {
         let r2 = i2.as_pound_foot();
         assert_almost_eq(r1, 338.954);
         assert_almost_eq(r2, 221.269);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn newton_meters_from_str() {
+        assert_almost_eq(
+            123.4,
+            Torque::from_str("123.4 Nm").unwrap().as_newton_metres(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pound_foot_from_str() {
+        assert_almost_eq(
+            123.4,
+            Torque::from_str("123.4 lbf ft").unwrap().as_pound_foot(),
+        );
+        assert_almost_eq(
+            123.4,
+            Torque::from_str("123.4 lbf-ft").unwrap().as_pound_foot(),
+        );
+        assert_almost_eq(
+            123.4,
+            Torque::from_str("123.4 lb ft").unwrap().as_pound_foot(),
+        );
+        assert_almost_eq(
+            123.4,
+            Torque::from_str("123.4 lb-ft").unwrap().as_pound_foot(),
+        );
     }
 }

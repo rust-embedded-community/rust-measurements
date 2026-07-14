@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// Number of POUNDS force in a Newton
 pub const POUNDS_PER_NEWTON: f64 = 0.224809;
 /// Number of POUNDALS in a Newton.  A poundal is the force necessary to
@@ -137,9 +140,25 @@ impl Measurement for Force {
 
 implement_measurement! { Force }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Force,
+    Force::from_newtons,
+    (Force::from_newtons, "N"),
+    (Force::from_micronewtons, "uN", "\u{00B5}N", "\u{03BC}N"),
+    (Force::from_millinewtons, "mN"),
+    (Force::from_pounds, "lbf"),
+    (Force::from_poundals, "pdl"),
+    (Force::from_kiloponds, "kgf"),
+    (Force::from_dynes, "dyn"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{force::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn newtons() {
@@ -280,5 +299,65 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn newton_from_str() {
+        assert_almost_eq(123.4, Force::from_str("123.4 N").unwrap().as_newtons());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn micronewton_from_str() {
+        assert_almost_eq(
+            123.4,
+            Force::from_str("123.4 uN").unwrap().as_micronewtons(),
+        );
+        assert_almost_eq(
+            123.4,
+            Force::from_str("123.4 \u{03BC}N")
+                .unwrap()
+                .as_micronewtons(),
+        );
+        assert_almost_eq(
+            123.4,
+            Force::from_str("123.4 \u{00B5}N")
+                .unwrap()
+                .as_micronewtons(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn millinewton_from_str() {
+        assert_almost_eq(
+            123.4,
+            Force::from_str("123.4 mN").unwrap().as_millinewtons(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn pounds_from_str() {
+        assert_almost_eq(123.4, Force::from_str("123.4 lbf").unwrap().as_pounds());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn poundals_from_str() {
+        assert_almost_eq(123.4, Force::from_str("123.4 pdl").unwrap().as_poundals());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn kiloponds_from_str() {
+        assert_almost_eq(123.4, Force::from_str("123.4 kgf").unwrap().as_kiloponds());
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn dynes_from_str() {
+        assert_almost_eq(123.4, Force::from_str("123.4 dyn").unwrap().as_dynes());
     }
 }

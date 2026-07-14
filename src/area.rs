@@ -308,7 +308,7 @@ impl Measurement for Area {
 impl_from_str! {
     Area, Area::from_square_meters,
     (Area::from_square_nanometers, "nm²", "nm2"),
-    (Area::from_square_micrometers, "\u{00b5}m²", "\u{03bc}m2", "um²", "um2"),
+    (Area::from_square_micrometers, "\u{00b5}m²", "\u{00b5}m2", "\u{03bc}m²", "\u{03bc}m2", "um²", "um2"),
     (Area::from_square_millimeters, "mm²", "mm2"),
     (Area::from_square_centimeters, "cm²", "cm2"),
     (Area::from_square_decimeters, "dm²", "dm2"),
@@ -576,8 +576,38 @@ mod test {
     #[test]
     #[cfg(feature = "from_str")]
     fn square_micrometer_str() {
-        let t = Area::from_str(" 100.0 um2");
-        assert_almost_eq(t.unwrap().as_square_micrometers(), 100.0);
+        assert_almost_eq(
+            Area::from_str("100 um²").unwrap().as_square_micrometers(),
+            100.0,
+        );
+        assert_almost_eq(
+            Area::from_str("100 um2").unwrap().as_square_micrometers(),
+            100.0,
+        );
+        assert_almost_eq(
+            Area::from_str("100 \u{00B5}m²")
+                .unwrap()
+                .as_square_micrometers(),
+            100.0,
+        );
+        assert_almost_eq(
+            Area::from_str("100 \u{00B5}m2")
+                .unwrap()
+                .as_square_micrometers(),
+            100.0,
+        );
+        assert_almost_eq(
+            Area::from_str("100 \u{03BC}m²")
+                .unwrap()
+                .as_square_micrometers(),
+            100.0,
+        );
+        assert_almost_eq(
+            Area::from_str("100 \u{03BC}m2")
+                .unwrap()
+                .as_square_micrometers(),
+            100.0,
+        );
     }
 
     #[test]

@@ -2,6 +2,9 @@
 
 use super::measurement::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// The `Current` struct can be used to deal with electric potential difference
 /// in a common way.
 ///
@@ -98,9 +101,22 @@ impl Measurement for Current {
 
 implement_measurement! { Current }
 
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    Current,
+    Current::from_amperes,
+    (Current::from_nanoamperes, "nA"),
+    (Current::from_microamperes, "uA", "\u{00B5}A", "\u{03BC}A"),
+    (Current::from_milliamperes, "mA"),
+    (Current::from_amperes, "A"),
+}
+
 #[cfg(test)]
 mod test {
     use crate::{current::*, test_utils::assert_almost_eq};
+
+    #[cfg(feature = "from_str")]
+    use core::str::FromStr;
 
     #[test]
     pub fn as_amperes() {
@@ -185,5 +201,55 @@ mod test {
         assert_eq!(a <= b, true);
         assert_eq!(a > b, false);
         assert_eq!(a >= b, false);
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn nanoamperes_from_str() {
+        assert_almost_eq(123.0, Current::from_str("123 nA").unwrap().as_nanoamperes());
+        assert_almost_eq(123.0, Current::from_str("123nA").unwrap().as_nanoamperes());
+        assert_almost_eq(
+            123.0,
+            Current::from_str("  123 nA  ").unwrap().as_nanoamperes(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn microamperes_from_str() {
+        assert_almost_eq(
+            123.4,
+            Current::from_str("123.4 uA").unwrap().as_microamperes(),
+        );
+        assert_almost_eq(
+            123.4,
+            Current::from_str("123.4 μA").unwrap().as_microamperes(),
+        );
+        assert_almost_eq(
+            123.4,
+            Current::from_str("123.4 µA").unwrap().as_microamperes(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn milliamperes_from_str() {
+        assert_almost_eq(
+            123.4,
+            Current::from_str("123.4 mA").unwrap().as_milliamperes(),
+        );
+        assert_almost_eq(
+            123.4,
+            Current::from_str("123.4mA").unwrap().as_milliamperes(),
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn amperes_from_str() {
+        assert_almost_eq(123.4, Current::from_str("123.4 A").unwrap().as_amperes());
+        assert_almost_eq(123.4, Current::from_str("123.4A").unwrap().as_amperes());
+
+        assert_almost_eq(123.4, Current::from_str("123.4").unwrap().as_amperes());
     }
 }

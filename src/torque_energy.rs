@@ -2,6 +2,9 @@
 
 use super::*;
 
+#[cfg(feature = "from_str")]
+use crate::impl_from_str;
+
 /// If you multiply a Force by a Length, we can't tell if you're
 /// pushing something along (which requires Energy) or rotating
 /// something (which creates a Torque). This struct is what results
@@ -38,5 +41,31 @@ impl Measurement for TorqueEnergy {
         TorqueEnergy {
             newton_metres: units,
         }
+    }
+}
+
+#[cfg(feature = "from_str")]
+impl_from_str! {
+    TorqueEnergy,
+    TorqueEnergy::from_base_units,
+    (TorqueEnergy::from_base_units, "Nm", "J"),
+}
+
+#[cfg(test)]
+mod test {
+    #[cfg(feature = "from_str")]
+    use {super::*, crate::test_utils::assert_almost_eq, core::str::FromStr};
+
+    #[test]
+    #[cfg(feature = "from_str")]
+    fn torque_energy_from_str() {
+        assert_almost_eq(
+            123.4,
+            TorqueEnergy::from_str("123.4 Nm").unwrap().as_base_units(),
+        );
+        assert_almost_eq(
+            123.4,
+            TorqueEnergy::from_str("123.4 J").unwrap().as_base_units(),
+        );
     }
 }
