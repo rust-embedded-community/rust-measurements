@@ -45,6 +45,12 @@ impl Voltage {
         Self::from_volts(kilovolts * 1000.0)
     }
 
+    /// Create a new Voltage from a floating point value in Megavolts
+    pub fn from_megavolts(megavolts: f64) -> Self {
+        Self::from_volts(megavolts * 1000000.0)
+    }
+    
+
     /// Convert this Voltage into a floating point value in Volts
     pub fn as_volts(&self) -> f64 {
         self.volts
@@ -63,6 +69,11 @@ impl Voltage {
     /// Convert this Voltage into a floating point value in Kilovolts
     pub fn as_kilovolts(&self) -> f64 {
         self.volts / 1000.0
+    }
+
+    /// Convert this Voltage into a floating point value in Megavolts
+    pub fn as_megavolts(&self) -> f64 {
+        self.volts / 1000000.0
     }
 }
 
@@ -122,6 +133,12 @@ mod test {
     pub fn as_kilovolts() {
         let u = Voltage::from_volts(10_000.0);
         assert_almost_eq(u.as_kilovolts(), 10.0);
+    }
+
+    #[test]
+    pub fn as_megavolts() {
+        let u = Voltage::from_volts(10_000_000.0);
+        assert_almost_eq(u.as_megavolts(), 10.0);
     }
 
     #[test]
