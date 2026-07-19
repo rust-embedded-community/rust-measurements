@@ -3,9 +3,6 @@
 use super::measurement::*;
 use crate::{mass::Mass, volume::Volume};
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 // Constants, metric
 /// Number of pound per cubic foot in 1 kilograms per cubic meter
 pub const LBCF_KGCM_FACTOR: f64 = 0.062427973725314;

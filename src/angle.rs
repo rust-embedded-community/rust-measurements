@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The 'Angle' struct can be used to deal with angles in a common way.
 ///
 /// # Example

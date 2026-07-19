@@ -3,9 +3,6 @@
 use super::length;
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of acres in a square meter
 const SQUARE_METER_ACRE_FACTOR: f64 = 1.0 / 4046.86;
 

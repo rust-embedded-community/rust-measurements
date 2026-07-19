@@ -3,9 +3,6 @@
 use super::measurement::*;
 use crate::{density::Density, pressure::Pressure, temperature::Temperature};
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The `Humidity` struct can be used to deal with relative humidity
 /// in air in a common way. Relative humidity is an important metric used
 /// in weather forecasts.

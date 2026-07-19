@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The `Volume` struct can be used to deal with volumes in a common way.
 ///
 /// #Example

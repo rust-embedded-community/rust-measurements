@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The `Energy` struct can be used to deal with energies in a common way.
 /// Common metric and imperial units are supported.
 ///

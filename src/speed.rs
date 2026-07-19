@@ -2,9 +2,6 @@
 
 use super::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of seconds in a minute
 pub const SECONDS_MINUTES_FACTOR: f64 = 60.0;
 /// Number of minutes in a hour

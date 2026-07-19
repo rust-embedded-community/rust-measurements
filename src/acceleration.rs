@@ -2,9 +2,6 @@
 
 use crate::{length, measurement::*};
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The `Acceleration` struct can be used to deal with Accelerations in a common way.
 /// Common metric and imperial units are supported.
 ///
