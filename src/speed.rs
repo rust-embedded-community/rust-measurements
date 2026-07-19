@@ -1,6 +1,5 @@
 //! Types and constants for handling speed.
 
-use super::measurement::*;
 use super::*;
 
 #[cfg(feature = "from_str")]
