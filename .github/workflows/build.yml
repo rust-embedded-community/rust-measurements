@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [staging, trying, master]
+    branches: [staging, trying, main]
   pull_request:
 
 name: Build
@@ -10,18 +10,12 @@ env:
   MSRV: 1.76
 
 jobs:
-  build-std:
+  build-std-msrv:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         FEATURES: ["", "from_str", "std", "serde"]
         TARGET: ["x86_64-unknown-linux-gnu"]
-
-        include:
-          # Test nightly but don't fail
-          - rust: nightly
-            experimental: true
-
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -33,24 +27,82 @@ jobs:
       - name: Test std
         run: cargo test --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
 
-  build-no-std:
+  build-no-std-msrv:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         FEATURES: ["", "from_str"]
         TARGET: [thumbv6m-none-eabi, thumbv7m-none-eabi]
-
-        include:
-          # Test nightly but don't fail
-          - rust: nightly
-            experimental: true
-            TARGET: x86_64-unknown-linux-gnu
-
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: ${{ env.MSRV }}
+          target: ${{ matrix.TARGET }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
+
+  build-std-stable:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        FEATURES: ["", "from_str", "std", "serde"]
+        TARGET: ["x86_64-unknown-linux-gnu"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.TARGET }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
+      - name: Test std
+        run: cargo test --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
+
+  build-no-std-stable:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        FEATURES: ["", "from_str"]
+        TARGET: [thumbv6m-none-eabi, thumbv7m-none-eabi]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.TARGET }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
+
+  build-std-nightly:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        TARGET: ["x86_64-unknown-linux-gnu"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: nightly
+          target: ${{ matrix.TARGET }}
+      - name: Build std
+        run: cargo build --target=${{ matrix.TARGET }} --all-features
+      - name: Test std
+        run: cargo test --target=${{ matrix.TARGET }} --all-features
+
+  build-no-std-nightly:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        FEATURES: ["from_str"]
+        TARGET: [thumbv7m-none-eabi]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: nightly
           target: ${{ matrix.TARGET }}
       - name: Build std
         run: cargo build --target=${{ matrix.TARGET }} --features=${{ matrix.FEATURES }}
@@ -62,7 +114,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: ${{ env.MSRV }}
-          target: ${{ matrix.TARGET }}
           components: rustfmt
       - name: Format
         run: cargo fmt --all -- --check
@@ -77,7 +128,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: ${{ env.MSRV }}
-          target: ${{ matrix.TARGET }}
           components: clippy
       - name: Clippy
         run: cargo clippy --features=${{ matrix.FEATURES }} -- -D warnings
