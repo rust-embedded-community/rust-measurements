@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of Pascals in an atmosphere
 pub const PASCAL_ATMOSPHERE_FACTOR: f64 = 101_325.0;
 /// Number of Pascals in a hectopascal

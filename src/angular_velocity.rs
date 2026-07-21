@@ -3,9 +3,6 @@
 use super::measurement::*;
 use crate::PI;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The 'AngularVelocity' struct can be used to deal with angular velocities in a common way.
 ///
 /// # Example

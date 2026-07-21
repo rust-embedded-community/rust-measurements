@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The 'Fraction' struct can be used to deal with fractions in a common way.
 ///
 /// In comparison to other measurements, fractions can be taken of all other available measurements.

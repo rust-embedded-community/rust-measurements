@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of pound-foot in a newton-metre
 const NEWTON_METRE_POUND_FOOT_FACTOR: f64 = 0.73756326522588;
 

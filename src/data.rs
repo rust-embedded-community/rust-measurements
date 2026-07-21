@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 // Constants
 const OCTET_BIT_FACTOR: f64 = 0.125;
 

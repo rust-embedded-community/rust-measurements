@@ -3,9 +3,6 @@
 use super::measurement::*;
 use crate::time;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of nanohertz in a Hz
 pub const HERTZ_NANOHERTZ_FACTOR: f64 = 1e9;
 /// Number of µHz in a Hz

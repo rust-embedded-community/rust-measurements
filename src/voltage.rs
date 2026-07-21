@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// The `Voltage` struct can be used to deal with electric potential difference
 /// in a common way.
 ///

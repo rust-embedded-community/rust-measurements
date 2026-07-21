@@ -2,9 +2,6 @@
 
 use super::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// If you multiply a Force by a Length, we can't tell if you're
 /// pushing something along (which requires Energy) or rotating
 /// something (which creates a Torque). This struct is what results

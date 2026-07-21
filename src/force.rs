@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of POUNDS force in a Newton
 pub const POUNDS_PER_NEWTON: f64 = 0.224809;
 /// Number of POUNDALS in a Newton.  A poundal is the force necessary to

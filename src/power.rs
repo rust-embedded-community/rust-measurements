@@ -2,9 +2,6 @@
 
 use super::measurement::*;
 
-#[cfg(feature = "from_str")]
-use crate::impl_from_str;
-
 /// Number of horsepower in a watt
 pub const WATT_HORSEPOWER_FACTOR: f64 = 1.0 / 745.6998715822702;
 /// Number of BTU/min in a watt
