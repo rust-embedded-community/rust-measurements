@@ -9,6 +9,9 @@ pub fn almost_eq(a: f64, b: f64) -> bool {
 
 /// Check two floating point values are approximately equal using some given delta (a fraction of the inputs)
 pub fn almost_eq_delta(a: f64, b: f64, d: f64) -> bool {
+    if a == b {
+        return true;
+    }
     (abs(a - b) / a) < d
 }
 
@@ -31,5 +34,18 @@ fn abs(x: f64) -> f64 {
         x
     } else {
         -x
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn assert_almost_eq_with_both_values_zero() {
+        let a = 0.0;
+        let b = 0.0;
+
+        assert_almost_eq(a, b);
     }
 }
